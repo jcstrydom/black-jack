@@ -2,6 +2,8 @@ import math
 import random
 import os
 import time
+import sys
+sys.path.append('./game_display')
 import Display as dp
 
 

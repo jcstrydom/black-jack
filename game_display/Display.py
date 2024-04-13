@@ -1,6 +1,5 @@
 import math
 import os
-# from game_display import cardforms as cf
 import cardforms as cf
 import time
 
@@ -180,29 +179,19 @@ def display(player,isFinalRound=False):
     if player_name == "House":
         print('\t\t'+player_name+"'s cards:")
         displayCards(pack,isFinalRound,player_name)
-    elif player.bust != True:
+    elif not player.bust:
         print('\t\t'+player_name+" has a score of "+str(player.score)+" with the following cards:")
         displayCards(pack,isFinalRound,player_name)
     elif player.bust:
         displayCards(pack,isFinalRound,player_name)
-        print('\n\t\t\t\t\t\t\t\t\t\t'+player_name+' has gone bust with a score of '+str(player.score)+'!!!')
+        print('\n' + '\t' * 10 + f'{player_name} has gone bust with a score of {player.score}!!!')
 
     
 
 if __name__ == '__main__':
-    pack = ['Hr J','Di K','Cl A','Sp 8','Hr 3','Hr 4','Hr 9']
+    pack = ['Hr J','Di K','Cl A','Sp 8','Hr 3','Hr 4','Hr 9','Cl 10']
     isFinalRound = True
     Pl1 = __Player("House")
     Pl1.cards = pack
-    display(Pl1)
-# else:
-#     os.system('cls')
-#     try:
-#         displayMain()
-#     except TypeError:
-#         print('There has been a problem in the use of the display module')
-#     except ValueError:
-#         print('There has been a problem in the use of the display module')
-#     finally:
-#         print("This is a module designed for the Johan Strydom BlackJack MileStone2 project on Udemy's: \n"
-#               "\tComplete Python Bootcamp -  ")
+    display(Pl1,isFinalRound)
+
