@@ -1,0 +1,7 @@
+print('\n\tOnce more, Welcome to BlackJack!')
+print("\n\tEach player has already been dealt their cards. \n\tWe will start from the first human player and give each player their turn, passing chronologically till it is the House's turn")
+print("\n\tAny player can bet on each players's turn. \n\t(I.e. if you think that this is a good bet, you can bet on the person sitting next to you. This is allowable to a max of 3 bets per round.)")
+print("\n\tAs stated, anybody can bet on your turn, but the player whose turn it is will be the only person making the decisions.\n\tThis means that the active player will be responsible for all losses/winnings on their hand.")
+print("\n\tEach player has one of two decisions to make on their turn: 1) Hit; 2) Stand.\n\tOn Hit they will be dealt an additional card, and on Stand they will end their turn.\n\tAll bets for that turn will be locked in before this decision is made.")
+print("\n\tLastly, the House will play. The House will Stand on a score of 17 or higher, and will Hit on anything less.\n\tEach player's cards will be evaluated directly to the House's hand. Winnings/losses will be determined accordingly.")
+input("\n\n\tEnjoy the game!!")
