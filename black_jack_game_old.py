@@ -5,17 +5,15 @@ import time
 import sys
 sys.path.append('./game_display')
 import game_display.Display as dp
-from Game import Game
-
 
 WAIT_TIME = 0.5
 
 
-def monotonousPrint(player,house):
+def monotonousPrint(p1,h1):
 	os.system('cls')
-	dp.display(house)
+	dp.display(h1)
 	print('\t'*10 + '='*40)
-	dp.display(player)
+	dp.display(p1)
 
 
 class Deck():
@@ -270,6 +268,67 @@ def balanceCheck(players):
 
 
 
+def gameSize():
+	"""
+	DOCSTRING: this verifies and establishes how many players are in the game
+	"""
+	correctInput = False
+	isnumber = False
+	playersTotal = 0
+	bots = 0
+	buy = 0
+	while not correctInput:
+		try:
+			playersTotal = int(input('\n\tHow many players are in the game (max 6): '))
+			isnumber = True
+		except ValueError:
+			print('The input was not a number, please try again...')
+		finally:
+			if isnumber and playersTotal <= 6 and playersTotal > 0:
+				correctInput = True
+				print('\tThank you')
+			elif isnumber:
+				print('This number is out of bounds, please try again...')
+				isnumber = False
+			else:
+				isnumber = False
+	correctInput = False
+	isnumber = False
+	while not correctInput:
+		try:
+			bots = int(input('\n\tHow many ROBOT players do you want (0 - '+str(round(playersTotal/2))+'): '))
+			isnumber = True
+		except ValueError:
+			print('The input was not a number, please try again...')
+		finally:
+			if isnumber and bots <= round(playersTotal/2) and bots >= 0:
+				correctInput = True
+				print('\tThank you')
+			elif isnumber:
+				print('This number is out of bounds, please try again...')
+				isnumber = False
+			else:
+				isnumber = False
+	correctInput = False
+	isnumber = False
+	while not correctInput:
+		try:
+			buy = int(input('\n\tBeginning balance for all players in this game (max 1000): '))
+			isnumber = True
+		except ValueError:
+			print('The input was not a number, please try again...')
+		finally:
+			if isnumber and buy <= 1000 and buy > 0:
+				correctInput = True
+				print('\tThank you')
+			elif isnumber:
+				print('This number is out of bounds, please try again...')
+				isnumber = False
+			else:
+				isnumber = False
+	return (playersTotal,bots,buy)
+
+
 
 def playerStart():
 	"""
@@ -349,7 +408,7 @@ def playersBet(pl1,initbet):
 	isnumber = False
 	while not correctInput:
 		if (pl1.balance - initbet) < initbet:
-			print(f"\n\tYour balance is too low for the next round. Your remaining balance of {pl1.balance} is being bet.")
+			print('\n\tYour balance is too low for the next round. Your remaining balance of '+str(pl1.balance)+' is being bet.')
 			input('\n\tPress enter to continue') #time.sleep(7.5)
 			bet = pl1.balance
 			pl1.balance = 0
@@ -417,21 +476,28 @@ def main():
 	"""
 	os.system('cls')
 	print('\n')
-	game = Game()
-	game.dealer.dealCards(game.players)
-
-
-	while not game.exitGame:
-		if game.openingBetIncrease != 0 and game.openingBetIncrease % 2 == 0:
-			game.initialBet += 25
-		for player in game.players:
-			if not player.is_pc:
-				game.exitGame = player.playersChoice(player)
+	players = playerStart()
+	os.system('cls')
+	dealer = Dealer()
+	deck = Deck()
+	dealer.shuffleCards(deck)
+	dealer.dealCards(players)
+	instructions()
+	finalRound = False
+	gameExit = False
+	betOpeningIncrease = 0
+	initialBet = 50
+	while not gameExit:
+		if betOpeningIncrease != 0 and betOpeningIncrease % 2 == 0:
+			initialBet += 25
+		for a in players:
+			if not a.is_pc:
+				gameExit = playersChoice(a,players[-1],initialBet,gameExit)
 				# gameExit = balanceCheck() if gameExit == False else True
-				if game.exitGame:
+				if gameExit:
 					break
 			else:
-				player.drawCard(game.house,initialBet)
+				a.drawCard(players[-1],initialBet)
 		if not gameExit:
 			betOpeningIncrease += 1
 			os.system('cls')

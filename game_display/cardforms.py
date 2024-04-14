@@ -1,17 +1,3 @@
-# ## These are GLOBALLY used variables
-# # The below is the dictionary for the forms
-# valDict = {' A':cf.ac,' 2':cf.tw,' 3':cf.th,' 4':cf.fo,' 5':cf.fi,' 6':cf.si,' 7':cf.se,' 8':cf.ei,' 9':cf.ni,'10':cf.te,' J':cf.ja,' Q':cf.qu,' K':cf.ki}
-# # The below is the dictionary for the suitToken to be used
-# suitDict = {'Di':cf.diT,'Cl':cf.clT,'Hr':cf.hrT,'Sp':cf.spT}
-# # The below is the dictionary for the suit form to be used
-# suitFormDict = {'Di':cf.diamonds,'Cl':cf.clubs,'Hr':cf.hearts,'Sp':cf.spades}
-
-
-# class Values:
-
-#       def __init__(self):
-#             pass
-
 
 diamonds = ('   00    ',
             '  0000   ',
