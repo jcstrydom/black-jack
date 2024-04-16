@@ -25,8 +25,8 @@ class Game:
         self.house = Player('House',999999)
         self.isFinalRound = False
         self.exitGame = False
-        self.initBetsize = 50
-        self.openingBetIncrease = 0
+        self.initialBet = 50
+        self.roundNumber = 0
 
         self.instructions()
 
@@ -85,38 +85,11 @@ class Game:
             pass
 
 
-    def playersBet(self,player):
-        correctInput = False
-        isnumber = False
-        while not correctInput:
-            if (player.balance - self.initbet) < self.initbet:
-                print(f"\n\t Your balance is too low for the next round. Your remaining balance of {player.balance} is being bet.")
-                input('\n\t Press enter to continue') #time.sleep(7.5)
-                bet = player.balance
-                player.balance = 0
-                return bet
-            else:
-                try:
-                    bet = int(input('\n\tWhat are you betting on your hand? (min: '+str(initbet)+', remaining balance:'+str(pl1.balance)+')\n\t'))
-                    isnumber = True
-                except ValueError:
-                    print('The input was not a number, please try again...')
-                finally:
-                    if isnumber and bet >= initbet and bet <= pl1.balance:
-                        correctInput = True
-                        print('\tThank you')
-                        input('\n\tPress enter to continue') #time.sleep(1)
-                        pl1.balance -= bet
-                        return bet
-                    elif isnumber:
-                        print('This number is out of bounds, please try again...')
-                        isnumber = False
-                    else:
-                        isnumber = False
+    
 						
 
     def balanceCheck(self):
-        return self.balance == 0
+        return any(x.balance == 0 for x in self.players)
 
     
     def playersAction(pl1,dealer):

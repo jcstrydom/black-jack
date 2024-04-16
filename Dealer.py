@@ -1,4 +1,5 @@
-import math
+import random
+import os
 from Deck import Deck
 
 
@@ -14,6 +15,7 @@ class Dealer():
 		self.turn =  []
 		self.pot_size = 0
 		self.deck = Deck()
+		self.shuffleCards()
 
 
 	def shuffleCards(self):
@@ -21,7 +23,7 @@ class Dealer():
 		DOCSTRING: here the new deck is shuffled
 		"""
 		print('\tDealer shuffled the cards...')
-		math.random.shuffle(self.deck.pack)
+		random.shuffle(self.deck.pack)
 
 
 	def dealCards(self,players):
@@ -51,6 +53,8 @@ class Dealer():
 				if reset_tries < player.aces:
 					reset_tries += 1
 					player.hand -= 10
+				else:
+					pass
 			else:
 				player.bust = True
 				break
@@ -62,8 +66,10 @@ class Dealer():
 		"""
 		card_to_add = self.deck.pack.pop(0)
 		player.addCard(card_to_add)
-		if card_to_add.split(' ')[1] == 'A':
+		if card_to_add.split(' ')[1].lower() == 'a':
 			player.aces += 1
+		# os.system('clear')
+		input('-'*40 + f"\n{player.name.upper()} ACES = {player.aces}\n" + '-'*40)
 		self.calculatePlayerScore(player)
 
 

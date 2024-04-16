@@ -34,7 +34,7 @@ class GameAssistant:
                 print("Invalid input. Please try again...")
 
     
-    def monotonousPrint(player,house):
+    def monotonousPrint(self, player, house):
         os.system('cls')
         dp.display(house)
         print('\t'*10 + '='*40)

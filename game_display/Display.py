@@ -177,14 +177,14 @@ def display(player,isFinalRound=False):
     player_name = player.name
     pack = player.cards
     if player_name == "House":
-        print('\t\t'+player_name+"'s cards:")
+        print(f"\t\t {player_name}'s cards:")
         displayCards(pack,isFinalRound,player_name)
     elif not player.bust:
-        print('\t\t'+player_name+" has a score of "+str(player.score)+" with the following cards:")
+        print(f"\t\t {player_name} has a score of {player.hand} with the following cards:")
         displayCards(pack,isFinalRound,player_name)
     elif player.bust:
         displayCards(pack,isFinalRound,player_name)
-        print('\n' + '\t' * 10 + f'{player_name} has gone bust with a score of {player.score}!!!')
+        print('\n' + '\t' * 10 + f'{player_name} has gone bust with a score of {player.hand}!!!')
 
     
 
