@@ -21,15 +21,22 @@ class Player():
 		self.assistant = GameAssistant()
 
 		self.name = name
+		self.balance = balance
 		self.is_pc = is_pc
 		self.bust = False
-		self.aces = 0
-		# self.score = 0
-		self.balance = balance
 		self.cards = []
+		self.aces = 0
 		self.hand = 0
 		self.bet = 0
-		self.winnings = []
+		self.winnings = {}
+		self.won = False
+
+	def newRound(self):
+		self.bust = False
+		self.cards = []
+		self.aces = 0
+		self.hand = 0
+		self.bet = 0
 		self.won = False
 
 
@@ -101,25 +108,16 @@ class Player():
 				print('\n\t\tThe house has a final score of '+str(self.hand))
 				input('\n\tPress enter to continue')
 
-	def makeABet(self,game):
-		while True:
-			try:
-				bet = int(input(f"\n\t {self.name}, what's your bet? (min: {0}, remaining balance: {1}) "
-            		.format(game.initbet, self.balance)))
-				if game.initbet <= bet <= self.balance:
-					self.balance -= bet
-					self.bet = bet
-			except ValueError:
-				print("Invalid input, please try again...")
-
 	
-	def playersBet(self, minimum_bet):
+	def playersBet(self, game):
 		"""Prompt player for bet, ensure it's a valid integer between minimum and balance"""
 		while True:
 			try:
-				bet = int(input(f"\n\t {self.name}, what's your bet? (min: {minimum_bet}, balance: {self.balance}) "))
-				if minimum_bet <= bet <= self.balance:
+				bet = input(f"\n\t {self.name}, what's your bet? [min: ({game.initialBet}), balance: {self.balance}] ")
+				bet = int(bet) if not(bet == '') else game.initialBet
+				if game.initialBet <= bet <= self.balance:
 					self.balance -= bet
+					game.pot += bet
 					return bet
 				raise ValueError
 			except ValueError:
@@ -127,30 +125,28 @@ class Player():
 
 
 	def playersAction(self,game):
-		# correctInput = False
-		# while not correctInput:
-		instrct = input('\tWhat do you want to do?\n\t[H] Hit (draw another card)\n\t[S] Stand (no action)\n\t[E] Exit the game\n\t\t')[0].lower()
-		if len(instrct) > 0:
-			if instrct[0].lower() == 'h':
-				game.dealer.addCard(self)
-				return False
-			elif instrct[0].lower() == 's':
-				print(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
-				input('\n\t Press enter to continue')
-				return True
-			elif instrct[0].lower() == 'e':
-				game.exitGame = True
-				return True
-			else:
-				print('You did not give a valid answer. Please try again...')
-		else:
-			pass
+		while True:
+			action = input('\t What do you want to do?\n\t [(H)] Hit (draw another card)\n\t [ S ] Stand (no action)\n\t [ E ] Exit the game\n\t\t')
+			action = (action[0].lower() if not(action == '') else 'h')
+			match (action):
+				case 'h':
+					game.dealer.addCard(self)
+					return False
+				case 's':
+					input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
+					return True
+				case 'e':
+					game.exitGame = True
+					return True
+				case _:
+					print('You did not give a valid answer. Please try again...')
+
 
 
 	def playersChoice(self,game):
 		moveOn = False
 		self.assistant.monotonousPrint(self,game.house)
-		self.bet = self.playersBet(game.initialBet)
+		self.bet = self.playersBet(game)
 		while not moveOn and not game.exitGame and not self.bust:
 			self.assistant.monotonousPrint(self,game.house)
 			moveOn = self.playersAction(game)
@@ -167,8 +163,8 @@ class Player():
 		"""
 		DOCSTRING: this returns the players name only
 		"""
-		return_str = f"{self.name} [PC = {self.is_pc}]:\n Cards: {','.join(x for x in self.cards)}\n Score: {self.score}\n Balance: {self.balance}\n Last Bet: {self.bet}"
-		return_str = f"\n Number of Aces: {self.aces}"
+		return_str = f"{self.name:<12} [PC = {self.is_pc}]:\n Cards: {','.join(x for x in self.cards)}\n Hand: {self.hand}\n Balance: {self.balance}\n Last Bet: {self.bet}"
+		return_str += f"\n Number of Aces: {self.aces}"
 		return_str += f"\n Player winnings: {str(self.winnings)}\n Player bust: {self.bust}'\n Player won: {self.won}\n----------------\n"
 		return  return_str
     

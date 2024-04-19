@@ -6,6 +6,7 @@ import sys
 sys.path.append('./game_display')
 import game_display.Display as dp
 from Game import Game
+from gameUtils import GameAssistant
 
 
 
@@ -13,11 +14,12 @@ def main():
 	"""
 	DOCSTRING: this is the main program for the game
 	"""
+
 	os.system('cls')
 	print('\n')
 	game = Game()
-	game.dealer.dealCards(game.players + [game.house])
-
+	assistant = GameAssistant()
+	game.newRound()
 
 	while not game.exitGame:
 		if game.roundNumber != 0 and game.roundNumber % 2 == 0:
@@ -29,35 +31,20 @@ def main():
 					break
 			else:
 				player.drawCard(game)
+		
+		os.system('cls')
+		game.dealer.payWinners(game)
+		assistant.printWinners(game)
+		stopGame = input("\n\t Do you want to stop? [Y/(N)] ")
+		game.exitGame = (stopGame[0].lower() in game.affirm_list if not(stopGame == '') else False)
+		game.exitGame = game.balanceCheck()	
 		if not game.exitGame:
-			game.roundNumber += 1
-			os.system('cls')
-			game.dealer.payWinners(game.players + [game.house])
-			game.exitGame = game.balanceCheck()
-			if game.exitGame:
-				break
-			corInp = False
-			while not corInp:
-				continueGame = input('\n\n\t\tDo you want to continue? [Y/N]')
-				if continueGame[0].lower() in ('y','j'):
-					break
-				elif continueGame[0].lower() == 'n':
-					game.exitGame = True
-					break
-				else:
-					print('You did not give a valid answer. Please try again...')
-					
-			if not game.exitGame:
-				os.system('cls')
-				game.dealer.dealCards(game.players + [game.house])
+			game.newRound()
+
 	os.system('cls')
-	if game.balanceCheck():
-		lowBalPlayers = [p for p in game.players if p.balance == 0]
-		print('The following player(s) have zero balances that caused the game to exit: '+','.join(x for x in lowBalPlayers)+'\n')
-		print('\n\tThe final standing was:')
-	else:
-		print('\n\tThank you for playing. The final standing was:')
-	game.dealer.payWinners(game.players + [game.house])
+	
+	print('\n\tThank you for playing. The final standing was:')
+	assistant.printWinners(game)
 
 
 if __name__=="__main__":

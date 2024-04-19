@@ -7,15 +7,17 @@ class Dealer():
 	"""
 	DOCSTRING: this is the object that facilitates playing the game. Most functionality sits here.
 	"""
-	def __init__(self):
+	def __init__(self,turn=0):
 		"""
 		DOCSTRING: This is when the dealer is instantiated
 		"""
 		print('\n\tNew dealer in the game...')
-		self.turn =  []
 		self.pot_size = 0
 		self.deck = Deck()
 		self.shuffleCards()
+
+	def newRound(self):
+		self.__init__()
 
 
 	def shuffleCards(self):
@@ -43,18 +45,20 @@ class Dealer():
 		DOCSTRING: calculating the player's score from scratch each time
 		"""
 		player.hand = 0
+		player.aces = 0
 		for c in player.cards:
 			card_value = c.split(' ')[1]
+			if card_value.lower() == 'a':
+				player.aces += 1
+			# os.system('clear')
 			player.hand += self.deck.cardPoints[card_value]
 		
+		# input('-'*40 + f"\n{player.name.upper()} ACES = {player.aces}\n" + '-'*40)
 		reset_tries = 0
 		while player.hand > 21:
-			if player.aces > 0:
-				if reset_tries < player.aces:
-					reset_tries += 1
-					player.hand -= 10
-				else:
-					pass
+			if reset_tries < player.aces and player.aces > 0:
+				reset_tries += 1
+				player.hand -= 10
 			else:
 				player.bust = True
 				break
@@ -64,70 +68,44 @@ class Dealer():
 		"""
 		DOCSTRING: hit action is performed
 		"""
-		card_to_add = self.deck.pack.pop(0)
-		player.addCard(card_to_add)
-		if card_to_add.split(' ')[1].lower() == 'a':
-			player.aces += 1
-		# os.system('clear')
-		input('-'*40 + f"\n{player.name.upper()} ACES = {player.aces}\n" + '-'*40)
+		player.cards.append(self.deck.pack.pop(0))
 		self.calculatePlayerScore(player)
 
 
-	def payWinners(self,players):
+	def payWinners(self,game):
 		"""
 		DOCSTRING: here the winners are paid
 		"""
-		house = players[-1]
-		players = players[:-1]
-
-
-		kittie = 0
-		winners = 0
 		winning_players = []
-		
-		
-		for i in players:
-			kittie += i.bet
 
 
-		if players[-1].bust:
-			for i in players:
-				if i.name != 'House' and not i.bust:
+		if game.house.bust:
+			for i in game.players:
+				if not i.bust:
 					i.won = True
-					winners += 1
 					winning_players.append(i.name)
 		else:
-			for i in players:
-				if i.name != 'House' and not i.bust:
-					if i.score > players[-1].score:
-						i.won = True
-						winners += 1
-						winning_players.append(i.name)
-				else:
-					pass
+			for i in game.players:
+				if not i.bust and i.hand > game.house.hand:
+					i.won = True
+					winning_players.append(i.name)
+					
+		winners = len(winning_players)
+
 		if winners == 0:
-			players[-1].balance = kittie
-			players[-1].won = True
-			players[-1].winnings = kittie
-			winners = 1
-			winning_players.append(players[-1].name)
+			game.house.won = True
+			game.house.winnings += game.pot
+			winning_players.append('House')
 		else:
-			for i in players:
+			per_winner_winnings = round(game.pot / winners)
+			for i in game.players:
 				if i.won:
-					i.winnings = round(kittie / winners)
-				else:
-					i.winnings = 0
-				i.balance += i.winnings
+					i.winnings[game.roundNumber] = per_winner_winnings
+					i.balance += i.winnings[game.roundNumber]
+					winning_players.append(i.name)
+	
+		game.winners[game.roundNumber] = winning_players
+				
 					
 
-		print('\nTotal winnings: '+str(kittie)+'\nTotal winners: '+str(winners)+'\nWinners share: '+str(round(kittie / winners)))
-		winners_string = ','.join(i for i in winning_players)
-		print("Winners: "+winners_string+"\n\n")
-
-		for i in players:
-			print(str(i))
-			i.bust = False
-			i.won = False
-			i.winnings = 0
-			i.bet = 0
-			i.score = 0
+		

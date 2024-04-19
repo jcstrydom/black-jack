@@ -9,20 +9,22 @@ class Game:
 
     def __init__(self):
 
-        print('\n\tWelcome to naive Black-Jack [with ML].\n\n\tNOTE: Please make sure that your window is maximized for optimal viewings')
+        print('\n\t Welcome to naive Black-Jack [with ML].\n\n\tNOTE: Please make sure that your window is maximized for optimal viewings')
         print(f"\n\t A new game is being initialised ...")
 
-        assitant = GameAssistant()
-    
-        player_names = input(f"\n\t Enter the player names (separated by space): ").split(' ')
-        # print(f"player_names type = {type(player_names)}")
-        # self.__botplayers = assitant.getNumericInput(variable_name='robot players',max_value=len(player_names))
-        self.__botplayers = assitant.getNumericInput('robot players',max_value=len(player_names))
-        self.buyin = assitant.getNumericInput('buyin',min_value=300,max_value=1000)
-        self.players = []
-        self.__init_players(player_names)  # list of players
-        self.dealer = Dealer()
+        assistant = GameAssistant()
+        assistant.getGameDetails()
+
+        self.affirm_list = ['y','j']
+        self.valid_list = ['y','j','n']
         self.house = Player('House',999999)
+        self.buyin = assistant.buyin
+        self.__botplayers = assistant.bots
+        self.__init_players(assistant.player_names)  # list of players
+        self.dealer = Dealer()
+        self.winners = {}
+
+        self.pot = 0
         self.isFinalRound = False
         self.exitGame = False
         self.initialBet = 50
@@ -30,35 +32,44 @@ class Game:
 
         self.instructions()
 
+
+
     def __init_players(self,player_names):
+        self.players = []
         for name in player_names:
             self.players.append(Player(name,self.buyin))
         for i in range(self.__botplayers):
             self.players.append(Player(f"PC-{i+1}",self.buyin,is_pc=True))
 
-    def instructInput(self):
-        """
-        DOCSTRING: this verifies and establishes if instructions are needed
-        """
-        valid_input = ['y','j','n']
-        affirm_list = valid_input[:-1]
 
-        instrct = ''
-        correctInput = False
-        while not correctInput:
-            instrct = input('\n\tDo you need any instructions on the game? [Y/N] - ')[0].lower()
-            correctInput = instrct in valid_input
-            if not correctInput:
-                print('You did not give a valid answer. Please try again...')
-        return instrct in affirm_list
-                
+    def newRound(self):
+        self.roundNumber += 1
+        self.dealer.newRound()
+        for player in self.players:
+            player.newRound()
+        self.dealer.dealCards(self.players + [self.house])
+
+    
+
+
+    def balanceCheck(self):
+        balanceBroke = any(x.balance == 0 for x in self.players)
+        if balanceBroke:
+            lowBalPlayers = [p for p in self.players if p.balance == 0]
+            print('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
+            print('\n\tThe final standing was:')
+        return balanceBroke
 
 
     def instructions(self):
         """
         DOCSTRING: This is the instructions on how to play the game.
         """
-        instruct = self.instructInput()
+        valid_input = ['y','j','n']
+        affirm_list = valid_input[:-1]
+        instrct = input("\n\t Do you need any instructions on the game? [Y/(N)] ")
+        instruct = (instrct[0].lower() in affirm_list if not(instrct == '') else False)
+
         if instruct:
             os.system('cls')
             print('\n\n\tWelcome to BlackJack!')
@@ -81,35 +92,6 @@ class Game:
             input("\n\n\tEnjoy the game!!!")
             os.system('cls')
             print("\n\n")
-        else:
-            pass
 
-
-    
-						
-
-    def balanceCheck(self):
-        return any(x.balance == 0 for x in self.players)
-
-    
-    def playersAction(pl1,dealer):
-        # correctInput = False
-        instrct = ''
-        # while not correctInput:
-        instrct = input('\tWhat do you want to do?\n\t[H] Hit (draw another card)\n\t[S] Stand (no action)\n\t[E] Exit the game\n\t\t')[0].lower()
-        if len(instrct) > 0:
-            if instrct[0].lower() == 'h':
-                dealer.extraCard(pl1)
-                return (False,False)
-            elif instrct[0].lower() == 's':
-                print('\n\t\tYour final score is '+str(pl1.score)+' with a bet of '+str(pl1.bet))
-                input('\n\tPress enter to continue')
-                return (True,False)
-            elif instrct[0].lower() == 'e':
-                return (True,True)
-            else:
-                print('You did not give a valid answer. Please try again...')
-        else:
-            pass
 
 	
