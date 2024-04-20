@@ -3,7 +3,7 @@ sys.path.append('./game_display')
 import game_display.Display as dp
 
 import math
-from gameUtils import GameAssistant
+from GameAssistant import GameAssistant
 
 class Player():
 	'''
@@ -71,6 +71,7 @@ class Player():
 				betRatio = 1
 			self.bet = min(math.floor(game.initialBet*betRatio),self.balance)
 			self.balance -= self.bet
+			game.dealer.pot += self.bet
             # print(str(self))
             # input('\n\tPress enter to continue')
 			while self.hand <= 15:
@@ -91,12 +92,12 @@ class Player():
 		## This is the logic for the HOUSE player
 		## THIS MAY BE NEEDED TO PUT IN SEPARATE METHOD
 		else:
-			while self.score <= 16:
+			while self.hand <= 16:
 				os.system('cls')
 				dp.display(game.house,True)
-				print('\n\t'+self.name+' decides to hit\n')
+				print(f"\n\t {self.name} decides to hit. Currently on {self.hand}.\n")
 				input('\n\tPress enter to continue')
-				game.dealer.extraCard(self)
+				game.dealer.addCard(self)
 			if self.bust:
 				os.system('cls')
 				dp.display(game.house,True)
@@ -117,7 +118,7 @@ class Player():
 				bet = int(bet) if not(bet == '') else game.initialBet
 				if game.initialBet <= bet <= self.balance:
 					self.balance -= bet
-					game.pot += bet
+					game.dealer.pot += bet
 					return bet
 				raise ValueError
 			except ValueError:
@@ -154,8 +155,6 @@ class Player():
 			self.assistant.monotonousPrint(self,game.house)
 			print(f"\n\n\t\t\t\t\t\t\t\t\t Sorry. You have lost your bet ({self.bet}) on this round.")
 			input('\n\t Press enter to continue')
-		
-
 
 
 
@@ -163,11 +162,14 @@ class Player():
 		"""
 		DOCSTRING: this returns the players name only
 		"""
-		return_str = f"{self.name:<12} [PC = {self.is_pc}]:\n Cards: {','.join(x for x in self.cards)}\n Hand: {self.hand}\n Balance: {self.balance}\n Last Bet: {self.bet}"
-		return_str += f"\n Number of Aces: {self.aces}"
-		return_str += f"\n Player winnings: {str(self.winnings)}\n Player bust: {self.bust}'\n Player won: {self.won}\n----------------\n"
+		return_str = f"{self.name:<18} [PC = {self.is_pc}]:\n Cards:            {'; '.join(x for x in self.cards)}\n Hand:             {self.hand}"
+		return_str += f"\n Balance:          {self.balance}\n Last Bet:         {self.bet}"
+		return_str += f"\n Number of Aces:   {self.aces}"
+		return_str += f"\n Player winnings:  {str(self.winnings)}\n Player bust:      {self.bust}\n Player won:       {self.won}\n --------------------------------\n"
 		return  return_str
     
+	def __repr__(self):
+		return f"Player({self.name})"
 
 		
 

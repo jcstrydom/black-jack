@@ -6,7 +6,7 @@ import sys
 sys.path.append('./game_display')
 import game_display.Display as dp
 from Game import Game
-from gameUtils import GameAssistant
+from GameAssistant import GameAssistant
 
 
 
@@ -31,15 +31,18 @@ def main():
 					break
 			else:
 				player.drawCard(game)
+		game.house.drawCard(game)
 		
 		os.system('cls')
 		game.dealer.payWinners(game)
 		assistant.printWinners(game)
-		stopGame = input("\n\t Do you want to stop? [Y/(N)] ")
+		stopGame = input("\n\t Do you want to stop? [ Y / (N) ] ")
 		game.exitGame = (stopGame[0].lower() in game.affirm_list if not(stopGame == '') else False)
-		game.exitGame = game.balanceCheck()	
 		if not game.exitGame:
 			game.newRound()
+		if game.balanceCheck():
+			break
+
 
 	os.system('cls')
 	

@@ -12,7 +12,7 @@ class Dealer():
 		DOCSTRING: This is when the dealer is instantiated
 		"""
 		print('\n\tNew dealer in the game...')
-		self.pot_size = 0
+		self.pot = 0
 		self.deck = Deck()
 		self.shuffleCards()
 
@@ -76,35 +76,28 @@ class Dealer():
 		"""
 		DOCSTRING: here the winners are paid
 		"""
-		winning_players = []
-
-
-		if game.house.bust:
-			for i in game.players:
-				if not i.bust:
-					i.won = True
-					winning_players.append(i.name)
+		if not game.house.bust:
+			winners = [i for i in game.players if not i.bust and i.hand > game.house.hand]
 		else:
-			for i in game.players:
-				if not i.bust and i.hand > game.house.hand:
-					i.won = True
-					winning_players.append(i.name)
-					
-		winners = len(winning_players)
+			winners = [i for i in game.players if not i.bust]
 
-		if winners == 0:
+		# if len(winners)>0:
+		# 	print(f"'winners' [{type(winners)}] of [{type(winners[0])}] = {winners}")
+		
+		if not winners and not game.house.bust:
 			game.house.won = True
-			game.house.winnings += game.pot
-			winning_players.append('House')
+			game.house.winnings[game.roundNumber] = self.pot
+			winners = [game.house]
 		else:
-			per_winner_winnings = round(game.pot / winners)
-			for i in game.players:
-				if i.won:
-					i.winnings[game.roundNumber] = per_winner_winnings
-					i.balance += i.winnings[game.roundNumber]
-					winning_players.append(i.name)
-	
-		game.winners[game.roundNumber] = winning_players
+			per_winner_winnings = int(self.pot / len(winners))
+			for i in winners:
+				i.won = True
+				i.winnings[game.roundNumber] = per_winner_winnings
+				i.balance += i.winnings[game.roundNumber]
+		
+		game.winners[game.roundNumber] = [player.name for player in winners]
+		# print(f"\n Winners = {game.winners[game.roundNumber]}")
+
 				
 					
 

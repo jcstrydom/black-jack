@@ -2,7 +2,7 @@ import os
 
 from Dealer import Dealer
 from Player import Player
-from gameUtils import GameAssistant
+from GameAssistant import GameAssistant
 
 
 class Game:
@@ -23,9 +23,7 @@ class Game:
         self.__init_players(assistant.player_names)  # list of players
         self.dealer = Dealer()
         self.winners = {}
-
-        self.pot = 0
-        self.isFinalRound = False
+        # self.isFinalRound = False
         self.exitGame = False
         self.initialBet = 50
         self.roundNumber = 0
@@ -44,6 +42,7 @@ class Game:
 
     def newRound(self):
         self.roundNumber += 1
+        self.house.newRound()
         self.dealer.newRound()
         for player in self.players:
             player.newRound()
@@ -55,9 +54,8 @@ class Game:
     def balanceCheck(self):
         balanceBroke = any(x.balance == 0 for x in self.players)
         if balanceBroke:
-            lowBalPlayers = [p for p in self.players if p.balance == 0]
-            print('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
-            print('\n\tThe final standing was:')
+            lowBalPlayers = [p.name for p in self.players if p.balance == 0]
+            input('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
         return balanceBroke
 
 
@@ -67,7 +65,7 @@ class Game:
         """
         valid_input = ['y','j','n']
         affirm_list = valid_input[:-1]
-        instrct = input("\n\t Do you need any instructions on the game? [Y/(N)] ")
+        instrct = input("\n\t Do you need any instructions on the game? [ Y / (N) ] ")
         instruct = (instrct[0].lower() in affirm_list if not(instrct == '') else False)
 
         if instruct:

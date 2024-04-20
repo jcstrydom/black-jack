@@ -5,21 +5,22 @@ import game_display.Display as dp
 class GameAssistant:
 
     def getGameDetails(self):
-        name_inputs = input(f"\n\t Enter the player names (separated by space) ['default'/<ENTER> for default]: ")
+        name_inputs = input(f"\n\t Enter the player names (separated by space) [<ENTER> --> default]: ")
         isDefault = (name_inputs[0] == 'd' if not(name_inputs == '') else True)
         self.player_names = ['Joe','Albert'] if isDefault else name_inputs.split(' ')
         self.bots = 1 if isDefault else self.getNumericInput('robot players',max_value=len(self.player_names))
         self.buyin = 300 if isDefault else self.getNumericInput('buyin',min_value=300,max_value=1000)
         if isDefault:
-            print(f"\n\t\t\t **Defaults used: names={self.player_names}, bots={self.bots}, buyin={self.buyin}**")
+            print(f"\n\n\n\t\t\t << !!! Defaults used: names={self.player_names}, bots={self.bots}, buyin={self.buyin}  !!! >> \n\n\n")
 
     def printWinners(self,game):
-        print("\n\t\t\t\t\t ***** RESULTS ***** ")
+        print("\n\t\t\t\t\t" + "="*40 + f"\n\t\t\t\t\t\t  RESULTS FOR ROUND {game.roundNumber}\n\t\t\t\t\t" + "="*40 + "\n")
         winners_count = len(game.winners[game.roundNumber])
-        per_winner_winnings = round(game.pot / winners_count) if winners_count > 0 else 0
-        print(f"\n Total winnings: {game.pot}\n Total winners: {winners_count}\n Winners share: {per_winner_winnings}\n")
-        winners_string = ','.join(i for i in game.winners[game.roundNumber])
+        per_winner_winnings = round(game.dealer.pot / winners_count) if winners_count > 0 else 0
+        print(f"\n Total winnings: {game.dealer.pot}\n Total winners: {winners_count}\n Winners share: {per_winner_winnings}\n")
+        winners_string = ','.join(game.winners[game.roundNumber])
         print("Winners: "+winners_string+"\n\n")
+        print(game.house)
         for player in game.players:
             print(player)
 
