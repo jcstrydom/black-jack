@@ -17,7 +17,7 @@ class GameAssistant:
         print("\n\t\t\t\t\t" + "="*40 + f"\n\t\t\t\t\t\t  RESULTS FOR ROUND {game.roundNumber}\n\t\t\t\t\t" + "="*40 + "\n")
         winners_count = len(game.winners[game.roundNumber])
         per_winner_winnings = round(game.dealer.pot / winners_count) if winners_count > 0 else 0
-        print(f"\n Total winnings: {game.dealer.pot}\n Total winners: {winners_count}\n Winners share: {per_winner_winnings}\n")
+        print(f"\n Total winnings: {game.dealer.pot:>6}; Total winners: {winners_count:>6}; Winners share: {per_winner_winnings:>6}\n")
         winners_string = ','.join(game.winners[game.roundNumber])
         print("Winners: "+winners_string+"\n\n")
         print(game.house)
