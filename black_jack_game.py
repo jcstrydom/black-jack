@@ -19,7 +19,7 @@ def main():
 	print('\n')
 	game = Game()
 	assistant = GameAssistant()
-	game.newRound()
+	game.newRound(isFirstRound=True)
 
 	while not game.exitGame:
 		if game.roundNumber != 0 and game.roundNumber % 2 == 0:

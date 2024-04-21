@@ -40,8 +40,9 @@ class Game:
             self.players.append(Player(f"PC-{i+1}",self.buyin,is_pc=True))
 
 
-    def newRound(self):
-        self.roundNumber += 1
+    def newRound(self,isFirstRound=False):
+        if not isFirstRound:
+            self.roundNumber += 1
         self.house.newRound()
         self.dealer.newRound()
         for player in self.players:
