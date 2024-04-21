@@ -1,15 +1,29 @@
-import math
-import random
-import os
-import time
-import sys
+
+import os, sys, keyboard
 sys.path.append('./game_display')
-import game_display.Display as dp
 from Game import Game
 from GameAssistant import GameAssistant
 
 
+def exit_gracefully():
+	print("\n\n\t\t\t   <<< EXITING GRACEFULLY >>>\n\n")
+	sys.exit()
+	
 
+
+def exit_on_key(func):
+	def wrapper(*args, **kwargs):
+		def handle_esc_key():
+			if keyboard.is_pressed('esc'):
+				exit_gracefully()
+		try:
+			return func(*args, **kwargs)
+		except KeyboardInterrupt or EOFError:
+			exit_gracefully()
+	return wrapper
+
+
+@exit_on_key
 def main():
 	"""
 	DOCSTRING: this is the main program for the game
