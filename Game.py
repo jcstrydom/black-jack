@@ -41,6 +41,8 @@ class Game:
 
 
     def newRound(self,isFirstRound=False):
+        if self.roundNumber != 0 and self.roundNumber % 2 == 0:
+            self.initialBet += 25
         if not isFirstRound:
             self.roundNumber += 1
         self.house.newRound()
@@ -53,9 +55,9 @@ class Game:
 
 
     def balanceCheck(self):
-        balanceBroke = any(x.balance == 0 for x in self.players)
+        balanceBroke = any(x.balance <= 0 for x in self.players)
         if balanceBroke:
-            lowBalPlayers = [p.name for p in self.players if p.balance == 0]
+            lowBalPlayers = [p.name for p in self.players if p.balance <= 0]
             input('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
         return balanceBroke
 

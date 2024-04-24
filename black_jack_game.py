@@ -31,28 +31,34 @@ def main():
     game.newRound(isFirstRound=True)
 
     while not game.exitGame:
-        if game.roundNumber != 0 and game.roundNumber % 2 == 0:
-            game.initialBet += 25
         for player in game.players:
             player.playersChoice(game)
             if game.exitGame:
                 break
-        game.house.houseHitStay(game)
+        else:
+            game.house.houseHitStay(game)
         
-        os.system('cls')
-        game.dealer.payWinners(game)
-        assistant.printWinners(game)
-        stopGame = input("\n\t Do you want to stop? [ Y / (N) ] ")
-        game.exitGame = (stopGame[0].lower() in game.affirm_list if not(stopGame == '') else False)
-        if not game.exitGame:
-            game.newRound()
-        if game.balanceCheck():
+            os.system('cls')
+            game.dealer.payWinners(game)
+            assistant.printWinners(game)
+            stopGame = input("\n\t Do you want to stop? [ Y / (N) ] ")
+            game.exitGame = (stopGame[0].lower() in game.affirm_list if not(stopGame == '') else False)
+            if not game.exitGame:
+                game.newRound()
+            if game.balanceCheck():
+                break
+        if game.exitGame:
             break
+            
 
 
     os.system('cls')
     
-    print('\n\tThank you for playing. The final standing was:')
+    if (game.roundNumber == 0) and (any(game.players[i].bet == 0 for i in range(len(game.players)))):
+        print('\n\t\t\t\t  Sorry to see you go so soon. See you next time \n\n')
+    else:
+        print('\n\tThank you for playing. The final standing was:')
+    
     assistant.printWinners(game)
 
 

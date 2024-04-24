@@ -129,7 +129,8 @@ class Player():
                 print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and went bust\n')
                 input('\n\tPress enter to continue')
         else:
-            while True:
+            keepOn = True
+            while (not self.bust) and (keepOn):
                 self.assistant.monotonousPrint(self,game.house)
                 action = input('\t What do you want to do?\n\t [(H)] Hit (draw another card)\n\t [ S ] Stand (no action)\n\t [ E ] Exit the game\n\t\t')
                 action = (action[0].lower() if not(action == '') else 'h')
@@ -138,10 +139,10 @@ class Player():
                         game.dealer.addCard(self)
                     case 's':
                         input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
-                        break
+                        keepOn = False
                     case 'e':
                         game.exitGame = True
-                        break
+                        keepOn = False
                     case _:
                         print('You did not give a valid answer. Please try again...')
 

@@ -15,11 +15,16 @@ class GameAssistant:
 
     def printWinners(self,game):
         print("\n\t\t\t\t\t" + "="*40 + f"\n\t\t\t\t\t\t  RESULTS FOR ROUND {game.roundNumber}\n\t\t\t\t\t" + "="*40 + "\n")
-        winners_count = len(game.winners[game.roundNumber])
-        per_winner_winnings = round(game.dealer.pot / winners_count) if winners_count > 0 else 0
-        print(f"\n Total winnings: {game.dealer.pot:>6}; Total winners: {winners_count:>6}; Winners share: {per_winner_winnings:>6}\n")
-        winners_string = ','.join(game.winners[game.roundNumber])
-        print("Winners: "+winners_string+"\n\n")
+        max_round_of_winners = max(list(game.winners.keys())) if len(game.winners) > 0 else -1
+        if max_round_of_winners != -1:
+            winners_count = len(game.winners[max_round_of_winners])
+            per_winner_winnings = round(game.dealer.pot / winners_count) if winners_count > 0 else 0
+            print(f"\n ROUND = {max_round_of_winners:>3}; Total winnings: {game.dealer.pot:>6}; Total winners: {winners_count:>6}; Winners share: {per_winner_winnings:>6}\n")
+            winners_string = ','.join(game.winners[game.roundNumber])
+            print("Winners: "+winners_string+"\n\n")
+        else:
+            print("\n No winners this round\n\n")
+        
         print(game.house)
         for player in game.players:
             print(player)
