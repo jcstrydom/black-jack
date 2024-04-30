@@ -203,13 +203,11 @@ class Player():
         Returns:
             None
         """
-        moveOn = False
+
         self.assistant.playerHouseHandDisplay(self,game.house)
         self.determineBet(game)
         self.hitStayExit(game)
-        # while not moveOn and not game.exitGame and not self.bust:
-        #     self.assistant.monotonousPrint(self,game.house)
-        #     moveOn = self.hitStayExit(game)
+
         if self.bust:
             self.assistant.playerHouseHandDisplay(self,game.house)
             print(f"\n\n\t\t\t\t\t\t\t\t\t Sorry. You have lost your bet ({self.bet}) on this round.")
