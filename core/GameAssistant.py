@@ -5,6 +5,15 @@ import game_display.Display as dp
 class GameAssistant:
 
     def getGameDetails(self):
+        """
+        Prompts the user to enter player names and other game details.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         name_inputs = input(f"\n\t Enter the player names (separated by space) [<ENTER> --> default]: ")
         isDefault = (name_inputs[0] == 'd' if not(name_inputs == '') else True)
         self.player_names = ['Joe','Albert'] if isDefault else name_inputs.split(' ')
@@ -13,7 +22,18 @@ class GameAssistant:
         if isDefault:
             print(f"\n\n\n\t\t\t << !!! Defaults used: names={self.player_names}, bots={self.bots}, buyin={self.buyin}  !!! >> \n\n\n")
 
+
     def printWinners(self,game):
+        """
+        A function to print the winners of a game round along with their details and winnings.
+
+        Parameters:
+            self: the object itself
+            game: an instance of the Game class representing the current game state
+
+        Returns:
+            None
+        """
         print("\n\t\t\t\t\t" + "="*40 + f"\n\t\t\t\t\t\t  RESULTS FOR ROUND {game.roundNumber}\n\t\t\t\t\t" + "="*40 + "\n")
         max_round_of_winners = max(list(game.winners.keys())) if len(game.winners) > 0 else -1
         if max_round_of_winners != -1:
@@ -31,6 +51,20 @@ class GameAssistant:
 
 
     def getNumericInput(self, variable_name, min_value=None, max_value=None):
+        """
+        Get a numeric input from the user with optional minimum and maximum values.
+
+        Args:
+            variable_name (str): The name of the variable to prompt the user for.
+            min_value (int, optional): The minimum allowed value for the input. Defaults to None.
+            max_value (int, optional): The maximum allowed value for the input. Defaults to None.
+
+        Returns:
+            int: The valid numeric input entered by the user.
+
+        Raises:
+            ValueError: If the input is not a valid numeric value or falls outside the specified range.
+        """
         
         __valid_input = False
 
@@ -60,7 +94,17 @@ class GameAssistant:
                 print("Invalid input. Please try again...")
 
     
-    def monotonousPrint(self, player, house):
+    def playerHouseHandDisplay(self, player, house):
+        """
+        A function that prints the hand of both the player and house
+
+        Parameters:
+            player (object): The player object to be displayed.
+            house (object): The house object to be displayed.
+
+        Returns:
+            None
+        """
         os.system('cls')
         dp.display(house)
         print('\t'*10 + '='*40)

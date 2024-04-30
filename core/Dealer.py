@@ -4,25 +4,50 @@ from core.Deck import Deck
 
 
 class Dealer():
-    """
-    DOCSTRING: this is the object that facilitates playing the game. Most functionality sits here.
-    """
     def __init__(self,turn=0):
         """
-        DOCSTRING: This is when the dealer is instantiated
+        Initializes the Dealer object with an optional turn parameter.
+        
+        Parameters:
+            turn (int): The turn number for the dealer, defaults to 0.
+        
+        Returns:
+            None
         """
         print('\n\tNew dealer in the game...')
         self.pot = 0
         self.deck = Deck()
         self.shuffleCards()
 
+
     def newRound(self):
+        """
+        Initializes a new round of the game by calling the __init__ method of the Dealer class.
+
+        This method is responsible for resetting the state of the Dealer object for a new round of the game.
+        It does so by calling the __init__ method of the Dealer class.
+
+        Parameters:
+            self (Dealer): The Dealer object.
+
+        Returns:
+            None
+        """
         self.__init__()
 
 
     def shuffleCards(self):
         """
-        DOCSTRING: here the new deck is shuffled
+        Shuffles the cards in the deck.
+
+        This function shuffles the cards in the deck by using the `random.shuffle()` function. 
+        It takes no parameters and does not return anything.
+
+        Parameters:
+            None
+
+        Returns:
+            None
         """
         print('\tDealer shuffled the cards...')
         random.shuffle(self.deck.pack)
@@ -30,7 +55,14 @@ class Dealer():
 
     def dealCards(self,players):
         """
-        DOCSTRING: initial dealing of cards
+        A function to deal cards to players.
+
+        Parameters:
+            self: the object itself
+            players (list): A list of Player objects to deal cards to.
+
+        Returns:
+            None
         """
         
         ## Just dealing the initial two cards per person
@@ -42,7 +74,22 @@ class Dealer():
 
     def calculatePlayerScore(self,player):
         """
-        DOCSTRING: calculating the player's score from scratch each time
+        Calculate the score of a player's hand of cards.
+
+        Parameters:
+            player (Player): The player whose score is being calculated.
+
+        Returns:
+            None
+
+        This function calculates the score of a player's hand of cards by iterating over each card in the player's hand.
+        It checks the value of each card and updates the player's hand and aces accordingly.
+        
+        If the player's hand exceeds 21, and the player has an ace in their hand, it adjusts the player's hand by subtracting 10 from it for each ace,
+        until the player's hand is less than or equal to 21, or the number of tries exceeds the number of aces.
+
+        Finally, If the player's hand is still greater than 21 after adjusting for all aces, the player's bust attribute is set to True.
+
         """
         player.hand = 0
         player.aces = 0
@@ -66,7 +113,14 @@ class Dealer():
 
     def addCard(self,player):
         """
-        DOCSTRING: hit action is performed
+        Add a card to the player's hand and calculate the player's score.
+
+        Parameters:
+            self: the object itself
+            player (Player): The player to add the card to.
+
+        Returns:
+            None
         """
         player.cards.append(self.deck.pack.pop(0))
         self.calculatePlayerScore(player)
@@ -74,7 +128,14 @@ class Dealer():
 
     def payWinners(self,game):
         """
-        DOCSTRING: here the winners are paid
+        Determines the winners of the game and distributes the pot among them.
+
+        Parameters:
+            self: The object itself.
+            game: An instance of the Game class representing the current game state.
+
+        Returns:
+            None
         """
         if not game.house.bust:
             winners = [i for i in game.players if not i.bust and i.hand > game.house.hand]

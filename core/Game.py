@@ -8,6 +8,23 @@ from core.GameAssistant import GameAssistant
 class Game:
 
     def __init__(self):
+        """
+        Initializes a new instance of the Game class.
+
+        This method is called when a new instance of the Game class is created. It sets up the initial state of the game,
+        including printing a welcome message, getting game details from the GameAssistant class, initializing game variables,
+        creating a Player object for the house, setting the buy-in amount, creating bot players, initializing players,
+        creating a Dealer object, initializing the winners dictionary, setting the exit game flag to False,
+        and setting the initial bet to 50, and setting the round number to 0.
+        
+        Finally, it calls the instructions method to display game instructions to the user.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
 
         print('\n\t Welcome to naive Black-Jack [with ML].\n\n\tNOTE: Please make sure that your window is maximized for optimal viewings')
         print(f"\n\t A new game is being initialised ...")
@@ -33,6 +50,22 @@ class Game:
 
 
     def __init_players(self,player_names):
+        """
+        Initializes the players for the game.
+
+        Args:
+            player_names (list): A list of player names.
+
+        Returns:
+            None
+
+        This function creates a list of Player objects based on the given player names.
+        It appends each Player object to the `self.players` list.
+        Additionally, it creates bot players and appends them to the `self.players` list.
+        The bot players are created using the `Player` class with the name "PC-{i+1}" and the `self.buyin` value.
+        The number of bot players is determined by the value of `self.__botplayers`.
+        
+        """
         self.players = []
         for name in player_names:
             self.players.append(Player(name,self.buyin))
@@ -41,6 +74,16 @@ class Game:
 
 
     def newRound(self,isFirstRound=False):
+        """
+        A function to start a new round in the game.
+
+        Args:
+            self: the object itself
+            isFirstRound (bool): A flag indicating if it's the first round of the game. Default is False.
+
+        Returns:
+            None
+        """
         if self.roundNumber != 0 and self.roundNumber % 2 == 0:
             self.initialBet += 25
         if not isFirstRound:
@@ -55,6 +98,12 @@ class Game:
 
 
     def balanceCheck(self):
+        """
+        Checks if any player in the game has a balance of 0 or less. If so, displays a message with the names of the players who have a zero balance.
+
+        Returns:
+            bool: True if any player has a balance of 0 or less, False otherwise.
+        """
         balanceBroke = any(x.balance <= 0 for x in self.players)
         if balanceBroke:
             lowBalPlayers = [p.name for p in self.players if p.balance <= 0]
