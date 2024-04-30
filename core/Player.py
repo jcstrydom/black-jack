@@ -3,7 +3,7 @@ sys.path.append('./game_display')
 import game_display.Display as dp
 
 import math
-from GameAssistant import GameAssistant
+from core.GameAssistant import GameAssistant
 
 class Player():
     '''

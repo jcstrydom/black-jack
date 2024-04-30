@@ -1,7 +1,7 @@
 import unittest, sys
 sys.path.append('./../')
-from Dealer import Dealer
-from Player import Player
+from core.Dealer import Dealer
+from core.Player import Player
 
 class TestCalculatePlayerScore(unittest.TestCase):
 

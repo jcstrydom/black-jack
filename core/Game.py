@@ -1,8 +1,8 @@
 import os
 
-from Dealer import Dealer
-from Player import Player
-from GameAssistant import GameAssistant
+from core.Dealer import Dealer
+from core.Player import Player
+from core.GameAssistant import GameAssistant
 
 
 class Game:

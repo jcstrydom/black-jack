@@ -1,6 +1,6 @@
 import random
 import os
-from Deck import Deck
+from core.Deck import Deck
 
 
 class Dealer():

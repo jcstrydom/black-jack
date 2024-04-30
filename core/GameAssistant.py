@@ -19,9 +19,9 @@ class GameAssistant:
         if max_round_of_winners != -1:
             winners_count = len(game.winners[max_round_of_winners])
             per_winner_winnings = round(game.dealer.pot / winners_count) if winners_count > 0 else 0
-            print(f"\n ROUND = {max_round_of_winners:>3}; Total winnings: {game.dealer.pot:>6}; Total winners: {winners_count:>6}; Winners share: {per_winner_winnings:>6}\n")
-            winners_string = ','.join(game.winners[game.roundNumber])
-            print("Winners: "+winners_string+"\n\n")
+            print(f"\n ROUND = {max_round_of_winners:>3}; Total winnings: {game.dealer.pot:>6}; Total winners: {winners_count:>6}; Winners share: {per_winner_winnings:>6}; ")
+            winners_string = ','.join(game.winners[max_round_of_winners])
+            print("Winners: "+winners_string+"\n")
         else:
             print("\n No winners this round\n\n")
         

@@ -1,8 +1,8 @@
 
 import os, sys
 sys.path.append('./game_display')
-from Game import Game
-from GameAssistant import GameAssistant
+from core.Game import Game
+from core.GameAssistant import GameAssistant
 
 def exit_gracefully():
     print("\n\n\t\t\t\t  <<< EXITING GRACEFULLY >>> \n\n")
