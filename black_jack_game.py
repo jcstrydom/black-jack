@@ -4,8 +4,12 @@ sys.path.append('./game_display')
 from core.Game import Game
 from core.GameAssistant import GameAssistant
 
+
+
 def exit_gracefully():
+    os.system('cls')
     print("\n\n\t\t\t\t  <<< EXITING GRACEFULLY >>> \n\n")
+    assistant.printWinners(game)
     sys.exit()
 
 
@@ -25,9 +29,11 @@ def main():
     """
 
     os.system('cls')
-    print('\n')
+    global game
+    global assistant
     game = Game()
     assistant = GameAssistant()
+    print('\n')
     game.newRound(isFirstRound=True)
 
     while not game.exitGame:
