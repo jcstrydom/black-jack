@@ -4,12 +4,9 @@ from core.Deck import Deck
 
 
 class Dealer():
-    def __init__(self,turn=0):
+    def __init__(self):
         """
-        Initializes the Dealer object with an optional turn parameter.
-        
-        Parameters:
-            turn (int): The turn number for the dealer, defaults to 0.
+        Initializes the Dealer object.
         
         Returns:
             None
