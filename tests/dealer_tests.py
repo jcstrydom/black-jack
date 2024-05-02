@@ -20,7 +20,9 @@ class TestDealer(unittest.TestCase):
         - None
         """
         self.dealer = Dealer()
+        self.pot = 200; self.roundNumber = 0
         player1 = Player('TestPlayer1'); player2 = Player('TestPlayer2')
+        self.house = Player('House',99999)
         self.players = [player1,player2]
 
 
@@ -75,7 +77,7 @@ class TestDealer(unittest.TestCase):
             self.assertFalse(player.bust)
 
 
-    def test_multiple_aces(self):
+    def test_calculatePlayerScore_multiple_aces(self):
         """
         Test the behavior of the `calculatePlayerScore` method when the player has multiple aces in their hand.
 
@@ -101,7 +103,7 @@ class TestDealer(unittest.TestCase):
             self.assertFalse(player.bust)
 
 
-    def test_hand_equal_to_21(self):
+    def test_calculatePlayerScore_hand_equal_to_21(self):
         """
         Test the behavior of the `calculatePlayerScore` method when the player's hand is equal to 21.
 
@@ -120,7 +122,7 @@ class TestDealer(unittest.TestCase):
         self.assertEqual(self.players[0].aces, 1)
         self.assertFalse(self.players[1].bust)
 
-    def test_hand_greater_than_21(self):
+    def test_calculatePlayerScore_hand_greater_than_21(self):
         """
         Test the behavior of the `calculatePlayerScore` method when the player's hand is greater than 21.
 
@@ -138,3 +140,140 @@ class TestDealer(unittest.TestCase):
         self.assertEqual(self.players[1].hand, 23)
         self.assertEqual(self.players[1].aces, 3)
         self.assertTrue(self.players[1].bust)
+
+    def test_newRound(self):
+        """
+        Test the behavior of the `newRound` method.
+        
+        The default values of the `newRound` method are:
+        - deck: shuffled
+        - pot: 0
+        
+        Parameters:
+            self (TestNewRound): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.dealer.newRound()
+        self.assertNotEqual(self.dealer.deck.pack[0], "Cl A")
+        self.assertEqual(self.dealer.pot, 0)
+
+    def test_dealCards(self):
+        """
+        Test the behavior of the `dealCards` method.
+        
+        The default values of the `dealCards` method are:
+        - all(len(player.cards) == 2 for player in self.players) shuffled
+        
+        Parameters:
+            self (TestDealCards): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.dealer.dealCards(self.players)
+        self.assertEqual(len(self.players[0].cards), 2)
+        self.assertEqual(len(self.players[1].cards), 2)
+
+    def test_addCards(self):
+        """
+        Test the behavior of the `addCards` method.
+
+        Parameters:
+            self (TestAddCards): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.dealer.calculatePlayerScore(self.players[0])
+        init_deck_size = len(self.dealer.deck.pack)
+        first_card = self.dealer.deck.pack[0]
+        init_hand = self.players[0].hand
+
+        self.dealer.addCard(self.players[0])
+
+        self.assertEqual(len(self.dealer.deck.pack), init_deck_size - 1)
+        self.assertEqual(self.players[0].cards[-1], first_card)
+        self.assertGreater(self.players[0].hand, init_hand)
+
+    def test_payWinners_house_bust(self):
+        """
+        Test the behavior of the `payWinners` method, when the house goes bust while the players don't.
+
+        Parameters:
+            self (TestPayWinners): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.roundNumber = 0; self.winners = {}; self.pot = 200
+        cards = ["Spade 2", "Heart 3","Diamond K","Club J"]
+        self.house.cards = ["Club A", "Heart A", "Heart 10", "Diamond 6", "Spade A", "Heart 4"]
+        
+        self.players[0].cards = cards[:2]; self.players[1].cards = cards[2:]
+        for player in [*self.players, self.house]:
+            self.dealer.calculatePlayerScore(player)
+
+        self.dealer.payWinners(self)
+        self.assertEqual(self.winners[0], ["TestPlayer1", "TestPlayer2"])
+        share = [100,100,0]
+        for win,player in zip(share,[*self.players, self.house]):
+            if player.name in self.winners[0]:
+                self.assertTrue(player.won)
+                # print(f"{player.name} --> {player.winnings}")
+                # self.assertEqual(player.winnings[0],win)
+
+    def test_payWinners_house_21(self):
+        """
+        Test the behavior of the `payWinners` method, when the house has 21 while TestPlayer2 also has 21.
+
+        Parameters:
+            self (TestPayWinners): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.roundNumber = 0; self.winners = {}; self.pot = 200
+        cards = ["Spade 2", "Heart 3","Diamond K","Club A"]
+        self.house.cards = ["Club K", "Heart A"]
+        
+        self.players[0].cards = cards[:2]; self.players[1].cards = cards[2:]
+        for player in [*self.players, self.house]:
+            self.dealer.calculatePlayerScore(player)
+
+        self.dealer.payWinners(self)
+        self.assertEqual(self.winners[0], ["House"])
+        share = [0,0,200]
+        for win,player in zip(share,[*self.players, self.house]):
+            if player.name in self.winners[0]:
+                self.assertTrue(player.won)
+                # print(f"{player.name} --> {player.winnings}")
+                # self.assertEqual(player.winnings[0],win)
+
+    def test_payWinners_house_20(self):
+        """
+        Test the behavior of the `payWinners` method, when the house has 21 while TestPlayer2 also has 21.
+
+        Parameters:
+            self (TestPayWinners): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.roundNumber = 0; self.winners = {}; self.pot = 200
+        cards = ["Spade 2", "Heart 3","Diamond K","Club A"]
+        self.house.cards = ["Club K", "Heart J"]
+        
+        self.players[0].cards = cards[:2]; self.players[1].cards = cards[2:]
+        for player in [*self.players, self.house]:
+            self.dealer.calculatePlayerScore(player)
+
+        self.dealer.payWinners(self)
+        self.assertEqual(self.winners[0], ["TestPlayer2"])
+        share = [0,200,0]
+        for win,player in zip(share,[*self.players, self.house]):
+            if player.name in self.winners[0]:
+                self.assertTrue(player.won)
+                # print(f"{player.name} --> {player.winnings}")
+                # self.assertEqual(player.winnings[0],win)

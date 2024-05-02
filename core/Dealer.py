@@ -134,10 +134,10 @@ class Dealer():
         Returns:
             None
         """
-        if not game.house.bust:
-            winners = [i for i in game.players if not i.bust and i.hand > game.house.hand]
-        else:
+        if game.house.bust:
             winners = [i for i in game.players if not i.bust]
+        else:
+            winners = [i for i in game.players if not i.bust and i.hand > game.house.hand]
 
         # if len(winners)>0:
         #     print(f"'winners' [{type(winners)}] of [{type(winners[0])}] = {winners}")
