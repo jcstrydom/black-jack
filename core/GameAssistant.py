@@ -15,8 +15,8 @@ class GameAssistant:
             None
         """
         if isTesting:
-            self.player_names = ['Joe','Albert']
-            self.bots = 1
+            self.player_names = ['TestPlayer1','TestPlayer2']
+            self.bots = 0
             self.buyin = 300
         else:
             name_inputs = input(f"\n\t Enter the player names (separated by space) [<ENTER> --> default]: ")
