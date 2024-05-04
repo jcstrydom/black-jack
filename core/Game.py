@@ -7,7 +7,7 @@ from core.GameAssistant import GameAssistant
 
 class Game:
 
-    def __init__(self):
+    def __init__(self,isTesting=False):
         """
         Initializes a new instance of the Game class.
 
@@ -25,27 +25,27 @@ class Game:
         Returns:
             None
         """
+        if not isTesting:
+            print('\n\t Welcome to naive Black-Jack [with ML].\n\n\tNOTE: Please make sure that your window is maximized for optimal viewings')
+            
+            self.instructions()
+        else:
 
-        print('\n\t Welcome to naive Black-Jack [with ML].\n\n\tNOTE: Please make sure that your window is maximized for optimal viewings')
-        print(f"\n\t A new game is being initialised ...")
+            assistant = GameAssistant()
+            assistant.getGameDetails(isTesting=isTesting)
 
-        assistant = GameAssistant()
-        assistant.getGameDetails()
+            self.affirm_list = ['y','j']
+            self.valid_list = ['y','j','n']
+            self.house = Player('House',999999)
+            self.buyin = assistant.buyin
+            self.__botplayers = assistant.bots
+            self.__init_players(assistant.player_names)  # list of players
+            self.dealer = Dealer()
+            self.winners = {}
+            self.exitGame = False
+            self.initialBet = 50
+            self.roundNumber = 0
 
-        self.affirm_list = ['y','j']
-        self.valid_list = ['y','j','n']
-        self.house = Player('House',999999)
-        self.buyin = assistant.buyin
-        self.__botplayers = assistant.bots
-        self.__init_players(assistant.player_names)  # list of players
-        self.dealer = Dealer()
-        self.winners = {}
-        # self.isFinalRound = False
-        self.exitGame = False
-        self.initialBet = 50
-        self.roundNumber = 0
-
-        self.instructions()
 
 
 
@@ -123,22 +123,24 @@ class Game:
         if instruct:
             os.system('cls')
             print('\n\n\tWelcome to BlackJack!')
-            print("\n\tEach player has already been dealt their cards. \n\tWe will start from the first human player and give each player their turn,"
-                " passing chronologically till it is the House's turn")
+            print("\n\tThe game starts by asking who will be playing? Enter a list of player names separated by spaces. Additionally the number of bots can be specified as well.")
+            print("\n\tEach player, including the House, will then be dealt their cards.")
+            print("\n\tWe will start from the first human player and give each player their turn, passing chronologically till it is the House's turn")
             print('\n\tBETTING:')
-            print("\tYou can only bet on your own turn, on your own hand. \n\tThe initial opening bet has a minimum of 50 and"
+            print("\tYou can only bet once, on your own turn, as soon as you can see the cards that you have been dealt. \n\tThe initial opening bet has a minimum of 50 and"
                 " after every two rounds this increases by 25.\n\tEach player can choose to bet a higher amount, up to their current balance.")
-            print('\tBets are finalized when a player sees their hand and no player will be able to change thereafter')
+            print("\tIn essence each player, plays against the House. Each player will be able to see one of the House's cards, when placing their bets.")
+            print('\tOnce you have placed your bet, you will proceed to your decision of HIT or STAND.')
             print('\n\tHIT / STAND:')
-            print("\tEach player has one of two decisions to make on their turn: \n\t\t[H] Hit, or\n\t\t[S] Stand\n\tOn Hit [H] they will be dealt an additional card"
-                ", and on Stand [S] they will end their turn.")
+            print("\tEach player has one of two decisions to make on their turn: \n\t\t[H] Hit - an additional card is dealt, or\n\t\t[S] Stand - their turn ends")
             print('\n\tTHE HOUSE:')
-            print("\tThe House will play last of all in each round. The House will Stand on a score of 17 or higher, and will Hit on anything less.")
+            print("\tThe House will play last of all in each round. The House will Stand on a hand of 17 or higher, and will Hit on anything less.")
             print('\n\tWINNING:')
-            print("\tEach player's cards will be evaluated directly to the House's hand.\n\tIf your hand is higher than the House, you will win your share of the kittie.")
-            print("\tThe kittie is the sum of all the bets. Your share will be the kittie devided by the number of winners.")
+            print("\tEach player's cards will be evaluated directly to the House's hand.\n\tIf your hand is higher than the House, you will win your share of the pot (i.e. pot/number of winners).")
+            print("\tThe pot is the sum of all the bets.")
             print('\n\tEND GAME:')
-            print("\tLastly, the game will end when any human player decides to exit the game, or when any player has a balance of 0")
+            print("\tLastly, the game will end when any human player decides to exit the game, or when any player has a balance of 0.")
+            print("\tAdditionally, the game will exit at any time if <CTRL + C> is pressed.")
             input("\n\n\tEnjoy the game!!!")
             os.system('cls')
             print("\n\n")

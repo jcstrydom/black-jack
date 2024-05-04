@@ -4,7 +4,7 @@ import game_display.Display as dp
 
 class GameAssistant:
 
-    def getGameDetails(self):
+    def getGameDetails(self,isTesting=False):
         """
         Prompts the user to enter player names and other game details.
 
@@ -14,13 +14,18 @@ class GameAssistant:
         Returns:
             None
         """
-        name_inputs = input(f"\n\t Enter the player names (separated by space) [<ENTER> --> default]: ")
-        isDefault = (name_inputs[0] == 'd' if not(name_inputs == '') else True)
-        self.player_names = ['Joe','Albert'] if isDefault else name_inputs.split(' ')
-        self.bots = 1 if isDefault else self.getNumericInput('robot players',max_value=len(self.player_names))
-        self.buyin = 300 if isDefault else self.getNumericInput('buyin',min_value=300,max_value=1000)
-        if isDefault:
-            print(f"\n\n\n\t\t\t << !!! Defaults used: names={self.player_names}, bots={self.bots}, buyin={self.buyin}  !!! >> \n\n\n")
+        if isTesting:
+            self.player_names = ['Joe','Albert']
+            self.bots = 1
+            self.buyin = 300
+        else:
+            name_inputs = input(f"\n\t Enter the player names (separated by space) [<ENTER> --> default]: ")
+            isDefault = (name_inputs[0] == 'd' if not(name_inputs == '') else True)
+            self.player_names = ['Joe','Albert'] if isDefault else name_inputs.split(' ')
+            self.bots = 1 if isDefault else self.getNumericInput('robot players',max_value=len(self.player_names))
+            self.buyin = 300 if isDefault else self.getNumericInput('buyin',min_value=300,max_value=1000)
+            if isDefault:
+                print(f"\n\n\n\t\t\t << !!! Defaults used: names={self.player_names}, bots={self.bots}, buyin={self.buyin}  !!! >> \n\n\n")
 
 
     def printWinners(self,game):
