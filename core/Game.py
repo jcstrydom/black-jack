@@ -27,24 +27,22 @@ class Game:
         """
         if not isTesting:
             print('\n\t Welcome to naive Black-Jack [with ML].\n\n\tNOTE: Please make sure that your window is maximized for optimal viewings')
-            
             self.instructions()
-        else:
 
-            assistant = GameAssistant()
-            assistant.getGameDetails(isTesting=isTesting)
+        assistant = GameAssistant()
+        assistant.getGameDetails(isTesting=isTesting)
 
-            self.affirm_list = ['y','j']
-            self.valid_list = ['y','j','n']
-            self.house = Player('House',999999)
-            self.buyin = assistant.buyin
-            self.__botplayers = assistant.bots
-            self.__init_players(assistant.player_names)  # list of players
-            self.dealer = Dealer()
-            self.winners = {}
-            self.exitGame = False
-            self.initialBet = 50
-            self.roundNumber = 0
+        self.affirm_list = ['y','j']
+        self.valid_list = ['y','j','n']
+        self.house = Player('House',999999)
+        self.buyin = assistant.buyin
+        self.__botplayers = assistant.bots
+        self.__init_players(assistant.player_names)  # list of players
+        self.dealer = Dealer()
+        self.winners = {}
+        self.exitGame = False
+        self.initialBet = 50
+        self.roundNumber = 0
 
 
 

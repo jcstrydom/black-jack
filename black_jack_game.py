@@ -1,5 +1,5 @@
 
-import os, sys
+import os, sys, keyboard
 sys.path.append('./game_display')
 from core.Game import Game
 from core.GameAssistant import GameAssistant
@@ -17,7 +17,7 @@ def exit_on_key(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except KeyboardInterrupt or EOFError:
+        except KeyboardInterrupt or keyboard.is_pressed('Esc') or keyboard.is_pressed('q'):
             exit_gracefully()
     return wrapper
 

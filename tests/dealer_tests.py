@@ -1,4 +1,5 @@
 import unittest
+from core.Game import Game
 from unittest.mock import Mock
 from core.Dealer import Dealer
 from core.Player import Player
@@ -19,11 +20,7 @@ class TestDealer(unittest.TestCase):
         Returns:
         - None
         """
-        self.dealer = Dealer()
-        self.pot = 200; self.roundNumber = 0
-        player1 = Player('TestPlayer1'); player2 = Player('TestPlayer2')
-        self.house = Player('House',99999)
-        self.players = [player1,player2]
+        self.game = Game(isTesting=True)
 
 
     def test_calculatePlayerScore_no_aces(self):
@@ -44,9 +41,9 @@ class TestDealer(unittest.TestCase):
         """
         cards = ["Spade 2", "Heart 3","Diamond K","Club J"]
         hands = [(5,0),(20,0)]
-        self.players[0].cards = cards[:2]; self.players[1].cards = cards[2:]
-        for hand,player in zip(hands,self.players):
-            self.dealer.calculatePlayerScore(player)
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        for hand,player in zip(hands,self.game.players):
+            self.game.dealer.calculatePlayerScore(player)
             self.assertEqual(player.hand, hand[0])
             self.assertEqual(player.aces, hand[1])
             self.assertFalse(player.bust)
@@ -69,9 +66,9 @@ class TestDealer(unittest.TestCase):
         """
         cards = ["Spade A", "Heart 3","Diamond K","Club A"]
         hands = [(14,1),(21,1)]
-        self.players[0].cards = cards[:2]; self.players[1].cards = cards[2:]
-        for hand,player in zip(hands,self.players):
-            self.dealer.calculatePlayerScore(player)
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        for hand,player in zip(hands,self.game.players):
+            self.game.dealer.calculatePlayerScore(player)
             self.assertEqual(player.hand, hand[0])
             self.assertEqual(player.aces, hand[1])
             self.assertFalse(player.bust)
@@ -95,9 +92,9 @@ class TestDealer(unittest.TestCase):
         """
         cards = ["Spade A", "Heart A", "Diamond A", "Spade A", "Heart K", "Diamond A"]
         hands = [(13,3),(12,2)]
-        self.players[0].cards = cards[:3]; self.players[1].cards = cards[3:]
-        for hand,player in zip(hands,self.players):
-            self.dealer.calculatePlayerScore(player)
+        self.game.players[0].cards = cards[:3]; self.game.players[1].cards = cards[3:]
+        for hand,player in zip(hands,self.game.players):
+            self.game.dealer.calculatePlayerScore(player)
             self.assertEqual(player.hand, hand[0])
             self.assertEqual(player.aces, hand[1])
             self.assertFalse(player.bust)
@@ -116,11 +113,11 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.players[0].cards = ["Spade A", "Heart 10"]
-        self.dealer.calculatePlayerScore(self.players[0])
-        self.assertEqual(self.players[0].hand, 21)
-        self.assertEqual(self.players[0].aces, 1)
-        self.assertFalse(self.players[1].bust)
+        self.game.players[0].cards = ["Spade A", "Heart 10"]
+        self.game.dealer.calculatePlayerScore(self.game.players[0])
+        self.assertEqual(self.game.players[0].hand, 21)
+        self.assertEqual(self.game.players[0].aces, 1)
+        self.assertFalse(self.game.players[1].bust)
 
     def test_calculatePlayerScore_hand_greater_than_21(self):
         """
@@ -135,11 +132,11 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.players[1].cards = ["Club A", "Heart A", "Heart 10", "Diamond 6", "Spade A", "Heart 4"]
-        self.dealer.calculatePlayerScore(self.players[1])
-        self.assertEqual(self.players[1].hand, 23)
-        self.assertEqual(self.players[1].aces, 3)
-        self.assertTrue(self.players[1].bust)
+        self.game.players[1].cards = ["Club A", "Heart A", "Heart 10", "Diamond 6", "Spade A", "Heart 4"]
+        self.game.dealer.calculatePlayerScore(self.game.players[1])
+        self.assertEqual(self.game.players[1].hand, 23)
+        self.assertEqual(self.game.players[1].aces, 3)
+        self.assertTrue(self.game.players[1].bust)
 
     def test_newRound(self):
         """
@@ -155,9 +152,9 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.dealer.newRound()
-        self.assertNotEqual(self.dealer.deck.pack[0], "Cl A")
-        self.assertEqual(self.dealer.pot, 0)
+        self.game.dealer.newRound()
+        self.assertNotEqual(self.game.dealer.deck.pack[0], "Cl A")
+        self.assertEqual(self.game.dealer.pot, 0)
 
     def test_dealCards(self):
         """
@@ -172,9 +169,9 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.dealer.dealCards(self.players)
-        self.assertEqual(len(self.players[0].cards), 2)
-        self.assertEqual(len(self.players[1].cards), 2)
+        self.game.dealer.dealCards(self.game.players)
+        self.assertEqual(len(self.game.players[0].cards), 2)
+        self.assertEqual(len(self.game.players[1].cards), 2)
 
     def test_addCards(self):
         """
@@ -186,16 +183,16 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.dealer.calculatePlayerScore(self.players[0])
-        init_deck_size = len(self.dealer.deck.pack)
-        first_card = self.dealer.deck.pack[0]
-        init_hand = self.players[0].hand
+        self.game.dealer.calculatePlayerScore(self.game.players[0])
+        init_deck_size = len(self.game.dealer.deck.pack)
+        first_card = self.game.dealer.deck.pack[0]
+        init_hand = self.game.players[0].hand
 
-        self.dealer.addCard(self.players[0])
+        self.game.dealer.addCard(self.game.players[0])
 
-        self.assertEqual(len(self.dealer.deck.pack), init_deck_size - 1)
-        self.assertEqual(self.players[0].cards[-1], first_card)
-        self.assertGreater(self.players[0].hand, init_hand)
+        self.assertEqual(len(self.game.dealer.deck.pack), init_deck_size - 1)
+        self.assertEqual(self.game.players[0].cards[-1], first_card)
+        self.assertGreater(self.game.players[0].hand, init_hand)
 
     def test_payWinners_house_bust(self):
         """
@@ -207,22 +204,24 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.roundNumber = 0; self.winners = {}; self.pot = 200
+        self.game.dealer.pot = 200; self.game.roundNumber = 0
         cards = ["Spade 2", "Heart 3","Diamond K","Club J"]
-        self.house.cards = ["Club A", "Heart A", "Heart 10", "Diamond 6", "Spade A", "Heart 4"]
+        self.game.house.cards = ["Club A", "Heart A", "Heart 10", "Diamond 6", "Spade A", "Heart 4"]
         
-        self.players[0].cards = cards[:2]; self.players[1].cards = cards[2:]
-        for player in [*self.players, self.house]:
-            self.dealer.calculatePlayerScore(player)
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        for player in [*self.game.players, self.game.house]:
+            self.game.dealer.calculatePlayerScore(player)
 
-        self.dealer.payWinners(self)
-        self.assertEqual(self.winners[0], ["TestPlayer1", "TestPlayer2"])
+        self.game.dealer.payWinners(self.game)
+
+        self.assertEqual(self.game.winners[0], ["TestPlayer1", "TestPlayer2"])
         share = [100,100,0]
-        for win,player in zip(share,[*self.players, self.house]):
-            if player.name in self.winners[0]:
+        for win,player in zip(share,[*self.game.players, self.game.house]):
+            # print(f"{self.game.winners[0]}")
+            if player.name in self.game.winners[0]:
                 self.assertTrue(player.won)
                 # print(f"{player.name} --> {player.winnings}")
-                # self.assertEqual(player.winnings[0],win)
+                self.assertEqual(player.winnings[0],win)
 
     def test_payWinners_house_21(self):
         """
@@ -234,22 +233,22 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.roundNumber = 0; self.winners = {}; self.pot = 200
-        cards = ["Spade 2", "Heart 3","Diamond K","Club A"]
-        self.house.cards = ["Club K", "Heart A"]
+        self.game.dealer.pot = 200; self.game.roundNumber = 0
+        cards = ["Spade 2", "Heart 3","Diamond K","Club J"]
+        self.game.house.cards = ["Club K", "Heart A"]
         
-        self.players[0].cards = cards[:2]; self.players[1].cards = cards[2:]
-        for player in [*self.players, self.house]:
-            self.dealer.calculatePlayerScore(player)
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        for player in [*self.game.players, self.game.house]:
+            self.game.dealer.calculatePlayerScore(player)
 
-        self.dealer.payWinners(self)
-        self.assertEqual(self.winners[0], ["House"])
+        self.game.dealer.payWinners(self.game)
+        self.assertEqual(self.game.winners[0], ["House"])
         share = [0,0,200]
-        for win,player in zip(share,[*self.players, self.house]):
-            if player.name in self.winners[0]:
+        for win,player in zip(share,[*self.game.players, self.game.house]):
+            if player.name in self.game.winners[0]:
                 self.assertTrue(player.won)
                 # print(f"{player.name} --> {player.winnings}")
-                # self.assertEqual(player.winnings[0],win)
+                self.assertEqual(player.winnings[0],win)
 
     def test_payWinners_house_20(self):
         """
@@ -261,19 +260,19 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.roundNumber = 0; self.winners = {}; self.pot = 200
+        self.game.dealer.pot = 200; self.game.roundNumber = 0
         cards = ["Spade 2", "Heart 3","Diamond K","Club A"]
-        self.house.cards = ["Club K", "Heart J"]
+        self.game.house.cards = ["Club K", "Heart J"]
         
-        self.players[0].cards = cards[:2]; self.players[1].cards = cards[2:]
-        for player in [*self.players, self.house]:
-            self.dealer.calculatePlayerScore(player)
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        for player in [*self.game.players, self.game.house]:
+            self.game.dealer.calculatePlayerScore(player)
 
-        self.dealer.payWinners(self)
-        self.assertEqual(self.winners[0], ["TestPlayer2"])
+        self.game.dealer.payWinners(self.game)
+        self.assertEqual(self.game.winners[0], ["TestPlayer2"])
         share = [0,200,0]
-        for win,player in zip(share,[*self.players, self.house]):
-            if player.name in self.winners[0]:
+        for win,player in zip(share,[*self.game.players, self.game.house]):
+            if player.name in self.game.winners[0]:
                 self.assertTrue(player.won)
                 # print(f"{player.name} --> {player.winnings}")
-                # self.assertEqual(player.winnings[0],win)
+                self.assertEqual(player.winnings[0],win)

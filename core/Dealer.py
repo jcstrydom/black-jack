@@ -134,26 +134,44 @@ class Dealer():
         Returns:
             None
         """
+        winners = []
+        number_of_winners = 0
+        # print(f"{game.dealer.pot=}")
         if game.house.bust:
-            winners = [i for i in game.players if not i.bust]
+            # print("House busts...")
+            for i in game.players:
+                if not i.bust:
+                    i.won = True
+                    number_of_winners += 1
+                    winners.append(i.name)
         else:
-            winners = [i for i in game.players if not i.bust and i.hand > game.house.hand]
+            for i in game.players:
+                if (not i.bust) and (i.hand > game.house.hand):
+                    i.won = True
+                    winners.append(i.name)
+                    number_of_winners += 1
+
+        if number_of_winners > 0:
+            # print(f"{number_of_winners} winners: {winners}")
+            per_winner_winnings = int(game.dealer.pot / float(number_of_winners))
+            # print(f"{per_winner_winnings=}")
+            for i in game.players:
+                if i.won:
+                    i.winnings[game.roundNumber] = per_winner_winnings
+                    i.balance += i.winnings[game.roundNumber]
+                    # print(f"{i.name} won {i.winnings[game.roundNumber]}")
+
+        if number_of_winners == 0:
+            # print(f"{number_of_winners} winners: {winners}")
+            game.house.won = True
+            game.house.winnings[game.roundNumber] = game.dealer.pot
+            winners = [game.house.name]
+            # print(f"{game.house.name} won {game.house.winnings[game.roundNumber]}")
 
         # if len(winners)>0:
         #     print(f"'winners' [{type(winners)}] of [{type(winners[0])}] = {winners}")
-        
-        if not winners and not game.house.bust:
-            game.house.won = True
-            game.house.winnings[game.roundNumber] = self.pot
-            winners = [game.house]
-        else:
-            per_winner_winnings = int(self.pot / len(winners))
-            for i in winners:
-                i.won = True
-                i.winnings[game.roundNumber] = per_winner_winnings
-                i.balance += i.winnings[game.roundNumber]
-        
-        game.winners[game.roundNumber] = [player.name for player in winners]
+
+        game.winners[game.roundNumber] = winners
         # print(f"\n Winners = {game.winners[game.roundNumber]}")
 
                 
