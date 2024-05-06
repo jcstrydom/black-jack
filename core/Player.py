@@ -126,30 +126,33 @@ class Player():
 
     
 
-    def houseHitStay(self,game):
+    def houseHitStay(self,game,isTesting=False):
         """
         This is a method specifically for the PC player to draw a card
         """
         while self.hand <= 16:
-            os.system('cls')
-            dp.display(game.house,True)
-            print(f"\n\t {self.name} decides to hit. Currently on {self.hand}.\n")
-            input('\n\tPress enter to continue')
+            if not isTesting:
+                os.system('cls')
+                dp.display(game.house,True)
+                print(f"\n\t {self.name} decides to hit. Currently on {self.hand}.\n")
+                input('\n\tPress enter to continue')
             game.dealer.addCard(self)
         if self.bust:
-            os.system('cls')
-            dp.display(game.house,True)
-            print('\n\n\tThe house has gone bust! All players in the game has won!!!'.upper())
-            input('\n\tPress enter to continue')
+            if not isTesting:
+                os.system('cls')
+                dp.display(game.house,True)
+                print('\n\n\tThe house has gone bust! All players in the game has won!!!'.upper())
+                input('\n\tPress enter to continue')
         else:
-            os.system('cls')
-            dp.display(game.house,True)
-            print('\n\t\tThe house has a final score of '+str(self.hand))
-            input('\n\tPress enter to continue')
+            if not isTesting:
+                os.system('cls')
+                dp.display(game.house,True)
+                print('\n\t\tThe house has a final score of '+str(self.hand))
+                input('\n\tPress enter to continue')
 
     
 
-    def hitStayExit(self,game):
+    def hitStayExit(self,game,isTesting=False):
         """
         This function handles the decision to hit or stay for the player in a game of blackjack.
         It takes in the game object as a parameter and uses it to make decisions based on the player's hand value and whether the player is a human or a computer.

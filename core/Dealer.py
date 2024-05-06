@@ -67,9 +67,9 @@ class Dealer():
             for player in players:
                 print(f"\t\t{player.name}'s {j+1} card is dealt...")
                 player.cards.append(self.deck.pack.pop(0))
-                self.calculatePlayerScore(player)
+                self.calculatePlayerHand(player)
 
-    def calculatePlayerScore(self,player):
+    def calculatePlayerHand(self,player):
         """
         Calculate the score of a player's hand of cards.
 
@@ -120,7 +120,7 @@ class Dealer():
             None
         """
         player.cards.append(self.deck.pack.pop(0))
-        self.calculatePlayerScore(player)
+        self.calculatePlayerHand(player)
 
 
     def payWinners(self,game):

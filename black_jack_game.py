@@ -17,7 +17,7 @@ def exit_on_key(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except KeyboardInterrupt or keyboard.is_pressed('Esc') or keyboard.is_pressed('q'):
+        except KeyboardInterrupt:
             exit_gracefully()
     return wrapper
 

@@ -43,7 +43,7 @@ class TestDealer(unittest.TestCase):
         hands = [(5,0),(20,0)]
         self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
         for hand,player in zip(hands,self.game.players):
-            self.game.dealer.calculatePlayerScore(player)
+            self.game.dealer.calculatePlayerHand(player)
             self.assertEqual(player.hand, hand[0])
             self.assertEqual(player.aces, hand[1])
             self.assertFalse(player.bust)
@@ -68,7 +68,7 @@ class TestDealer(unittest.TestCase):
         hands = [(14,1),(21,1)]
         self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
         for hand,player in zip(hands,self.game.players):
-            self.game.dealer.calculatePlayerScore(player)
+            self.game.dealer.calculatePlayerHand(player)
             self.assertEqual(player.hand, hand[0])
             self.assertEqual(player.aces, hand[1])
             self.assertFalse(player.bust)
@@ -94,7 +94,7 @@ class TestDealer(unittest.TestCase):
         hands = [(13,3),(12,2)]
         self.game.players[0].cards = cards[:3]; self.game.players[1].cards = cards[3:]
         for hand,player in zip(hands,self.game.players):
-            self.game.dealer.calculatePlayerScore(player)
+            self.game.dealer.calculatePlayerHand(player)
             self.assertEqual(player.hand, hand[0])
             self.assertEqual(player.aces, hand[1])
             self.assertFalse(player.bust)
@@ -114,7 +114,7 @@ class TestDealer(unittest.TestCase):
             None
         """
         self.game.players[0].cards = ["Spade A", "Heart 10"]
-        self.game.dealer.calculatePlayerScore(self.game.players[0])
+        self.game.dealer.calculatePlayerHand(self.game.players[0])
         self.assertEqual(self.game.players[0].hand, 21)
         self.assertEqual(self.game.players[0].aces, 1)
         self.assertFalse(self.game.players[1].bust)
@@ -133,7 +133,7 @@ class TestDealer(unittest.TestCase):
             None
         """
         self.game.players[1].cards = ["Club A", "Heart A", "Heart 10", "Diamond 6", "Spade A", "Heart 4"]
-        self.game.dealer.calculatePlayerScore(self.game.players[1])
+        self.game.dealer.calculatePlayerHand(self.game.players[1])
         self.assertEqual(self.game.players[1].hand, 23)
         self.assertEqual(self.game.players[1].aces, 3)
         self.assertTrue(self.game.players[1].bust)
@@ -183,7 +183,7 @@ class TestDealer(unittest.TestCase):
         Returns:
             None
         """
-        self.game.dealer.calculatePlayerScore(self.game.players[0])
+        self.game.dealer.calculatePlayerHand(self.game.players[0])
         init_deck_size = len(self.game.dealer.deck.pack)
         first_card = self.game.dealer.deck.pack[0]
         init_hand = self.game.players[0].hand
@@ -210,7 +210,7 @@ class TestDealer(unittest.TestCase):
         
         self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
         for player in [*self.game.players, self.game.house]:
-            self.game.dealer.calculatePlayerScore(player)
+            self.game.dealer.calculatePlayerHand(player)
 
         self.game.dealer.payWinners(self.game)
 
@@ -239,7 +239,7 @@ class TestDealer(unittest.TestCase):
         
         self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
         for player in [*self.game.players, self.game.house]:
-            self.game.dealer.calculatePlayerScore(player)
+            self.game.dealer.calculatePlayerHand(player)
 
         self.game.dealer.payWinners(self.game)
         self.assertEqual(self.game.winners[0], ["House"])
@@ -266,7 +266,7 @@ class TestDealer(unittest.TestCase):
         
         self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
         for player in [*self.game.players, self.game.house]:
-            self.game.dealer.calculatePlayerScore(player)
+            self.game.dealer.calculatePlayerHand(player)
 
         self.game.dealer.payWinners(self.game)
         self.assertEqual(self.game.winners[0], ["TestPlayer2"])
