@@ -130,6 +130,7 @@ class Player():
         """
         This is a method specifically for the PC player to draw a card
         """
+        game.dealer.calculatePlayerHand(self)
         while self.hand <= 16:
             if not isTesting:
                 os.system('cls')
@@ -137,6 +138,7 @@ class Player():
                 print(f"\n\t {self.name} decides to hit. Currently on {self.hand}.\n")
                 input('\n\tPress enter to continue')
             game.dealer.addCard(self)
+        print(f"{self.name=} {self.bust}")
         if self.bust:
             if not isTesting:
                 os.system('cls')

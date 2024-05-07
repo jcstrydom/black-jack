@@ -90,6 +90,7 @@ class Dealer():
         """
         player.hand = 0
         player.aces = 0
+        player.bust = False
         for c in player.cards:
             card_value = c.split(' ')[1]
             if card_value.lower() == 'a':
