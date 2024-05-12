@@ -95,7 +95,7 @@ class Game:
     
 
 
-    def balanceCheck(self):
+    def balanceCheck(self,isTesting=False):
         """
         Checks if any player in the game has a balance of 0 or less. If so, displays a message with the names of the players who have a zero balance.
 
@@ -105,7 +105,10 @@ class Game:
         balanceBroke = any(x.balance <= 0 for x in self.players)
         if balanceBroke:
             lowBalPlayers = [p.name for p in self.players if p.balance <= 0]
-            input('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
+            if not isTesting:
+                input('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
+            else:
+                print('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
         return balanceBroke
 
 

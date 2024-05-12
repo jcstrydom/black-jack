@@ -14,7 +14,7 @@ A short how-to-guide to run tests written for the environment
 >
 >This can be run inside your python distro natively, or from within an activated conda environment.
 
-## Running `coverage`
+## Running <u>ALL</u> tests with `coverage`
 
 If the prerequisits are met, then follow these steps to run the tests:
 
@@ -47,6 +47,21 @@ This will produce a new directory `htmlcov` which contains (among other files) `
 1. Right-click `index.html` file and select `Open with Live Server`
 
 This opens the generated report, which allows you to navigate your code and the coverage of all tests
+
+## Running specific tests with `coverage`
+
+All setup and prerequists hold as for *all* tests. Simply run the following:
+
+1. Ensure that you are in the root directory of your package
+2. Run:
+```
+> coverage run -m unittest .\<tests-directory>\<name-of-test-to-run>.py
+```
+
+E.g.
+```
+> coverage run -m unittest .\tests\test_game.py
+```
 
 
 > ***NOTE***: this file is generated from a Windows perspective. It is assumed that Mac, and Linux will follow very similar steps.
