@@ -227,34 +227,35 @@ class TestCalculatePlayerScore(unittest.TestCase):
         Returns:
         - None
         """
-
         cards = ["Di 10","Sp 2","Sp A","Cl 10","Hr K","Cl Q"]
-        # Test case where player's hand is less than or equal to 16
-        self.game.house.cards = cards[:2]
-        self.game.dealer.calculatePlayerHand(self.game.house)
-        # print(f"{self.game.house.cards=} [{self.game.house.hand=}]")
+        self.game.players[0].is_pc = True
+        player = self.game.players[0]
+        # Test case where player's hand is less than or equal to 15
+        player.cards = cards[:2]
+        self.game.dealer.calculatePlayerHand(player)
+        print(f"{player.name=}: {player.cards=} [{player.hand=}]")
         
-        self.game.house.houseHitStay(self.game,isTesting=True)
-        self.assertGreater(self.game.house.hand,16)
+        player.hitStayExit(self.game,isTesting=True)
+        self.assertGreater(player.hand,15)
         
 
-        # Test case where player's hand is greater than 16 and the house has bust
-        self.game.house.cards = cards[2:4]
-        self.game.dealer.calculatePlayerHand(self.game.house)
-        # print(f"{self.game.house.cards=} [{self.game.house.hand=}]")
+        # Test case where player's hand is greater than 15 and the house has bust
+        player.cards = cards[2:4]
+        self.game.dealer.calculatePlayerHand(player)
+        print(f"{player.name=}: {player.cards=} [{player.hand=}]")
         
-        self.game.house.houseHitStay(self.game,isTesting=True)
-        self.assertGreater(self.game.house.hand,16)
-        # self.assertEqual(self.game.house.bust,False)
-        # print(f"{self.game.house.cards=} [{self.game.house.hand=}]")
+        player.hitStayExit(self.game,isTesting=True)
+        self.assertGreater(player.hand,16)
+        self.assertEqual(player.bust,False)
 
-        self.game.house.cards = cards[3:]
-        self.game.dealer.calculatePlayerHand(self.game.house)
-        # print(f"{self.game.house.cards=} [{self.game.house.hand=}]")
+        player.cards = cards[3:]
+        self.game.dealer.calculatePlayerHand(player)
+        print(f"{player.name=}: {player.cards=} [{player.hand=}]")
         
-        self.game.house.houseHitStay(self.game,isTesting=True)
-        self.assertGreater(self.game.house.hand,16)
-        self.assertEqual(self.game.house.bust,True)
+        player.hitStayExit(self.game,isTesting=True)
+        self.assertGreater(player.hand,16)
+        self.assertEqual(player.bust,True)
+        
 
 
 if __name__ == '__main__':

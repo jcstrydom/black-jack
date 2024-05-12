@@ -151,7 +151,6 @@ class Player():
                 dp.display(game.house,True)
                 print('\n\t\tThe house has a final score of '+str(self.hand))
                 input('\n\tPress enter to continue')
-
     
 
     def hitStayExit(self,game,isTesting=False):
@@ -166,18 +165,21 @@ class Player():
         """
         if self.is_pc:
             while self.hand <= 15:
-                self.assistant.playerHouseHandDisplay(self,game.house)
-                print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and decides to hit\n')
-                input('\n\tPress enter to continue')
+                if not isTesting:
+                    self.assistant.playerHouseHandDisplay(self,game.house)
+                    print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and decides to hit\n')
+                    input('\n\tPress enter to continue')
                 game.dealer.addCard(self)
             if not self.bust:
-                self.assistant.playerHouseHandDisplay(self,game.house)
-                print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and decides stay\n')
-                input('\n\tPress enter to continue')
+                if not isTesting:
+                    self.assistant.playerHouseHandDisplay(self,game.house)
+                    print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and decides stay\n')
+                    input('\n\tPress enter to continue')
             else:
-                self.assistant.playerHouseHandDisplay(self,game.house)
-                print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and went bust\n')
-                input('\n\tPress enter to continue')
+                if not isTesting:
+                    self.assistant.playerHouseHandDisplay(self,game.house)
+                    print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and went bust\n')
+                    input('\n\tPress enter to continue')
         else:
             keepOn = True
             while (not self.bust) and (keepOn):
@@ -195,6 +197,7 @@ class Player():
                         keepOn = False
                     case _:
                         print('You did not give a valid answer. Please try again...')
+
 
 
 
