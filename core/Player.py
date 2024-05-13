@@ -1,17 +1,23 @@
 import os,sys
+import sqlite3
 sys.path.append('./game_display')
 import game_display.Display as dp
 
 import math
 from core.GameAssistant import GameAssistant
 
+
+# Establish a connection to the database
+CONN = sqlite3.connect('data/game_state.db')
+C = CONN.cursor()
+
+
 class Player():
     '''
     DOCSTRING: this class can be used for both computer and human players
     NOTE: all classes will have a list, and there is a pc indicator to say if it is an Computer or not
     '''
-    # is_pc = False
-
+    
 
     def __init__(self,name,balance=100,is_pc=False):
         """
@@ -28,6 +34,57 @@ class Player():
         self.bet = 0
         self.winnings = {}
         self.won = False
+
+
+    def __log_bet(self,game):
+        """
+        Logs the bet made by the player.
+
+        Parameters:
+            game (Game): The current game object.
+
+        Returns:
+            None
+
+        This function logs the bet made by the player into the database.
+
+        Note:
+            - This function assumes that there is a database connection available.
+            - This function assumes that the database table "players_bet" exists and has the appropriate columns.
+        """
+        house_card = game.house.cards[-1]
+        house_hand = game.dealer.deck.cardPoints[house_card.split()[1]]
+
+        state = (game.game_ID, game.round, self.name, self.is_pc, self.cards, self.hand, self.bet, game.house.name, house_card, house_hand, game.dealer.pot)
+        C.execute("INSERT INTO players_bet VALUES (" + " ?,"*len(state)[:-1] + ")", state)
+
+        CONN.commit()
+
+
+    def __log_hitStay(self,choice,game):
+        """
+        Logs the player's decision to hit or stay.
+    
+        Parameters:
+            choice (str): The player's decision to hit or stay.
+            game (Game): The current game object.
+    
+        Returns:
+            None
+    
+        This function logs the player's decision to hit or stay into the database.
+    
+        Note:
+            - This function assumes that there is a database connection available.
+            - This function assumes that the database table "players_hitStay" exists and has the appropriate columns.
+        """
+        house_card = game.house.cards[-1]
+        house_hand = game.dealer.deck.cardPoints[house_card.split()[1]]
+
+        state = (game.game_ID, game.round, self.name, self.is_pc, self.cards, self.hand, self.bust, game.house.name, house_card, house_hand, game.dealer.pot, choice)
+        C.execute("INSERT INTO players_hitStay VALUES (" + " ?,"*len(state)[:-1] + ")", state)
+
+        CONN.commit()
 
     def newRound(self):
         """
@@ -101,6 +158,7 @@ class Player():
             self.bet = min(math.floor(game.initialBet*betRatio),self.balance)
             self.balance -= self.bet
             game.dealer.pot += self.bet
+            self.__log_bet(game)
         else:
             while True:
                 try:
@@ -112,11 +170,13 @@ class Player():
                         self.bet = bet
                         self.balance -= bet
                         game.dealer.pot += bet
+                        self.__log_bet(game)
                         break
                     elif game.initialBet <= bet <= self.balance:
                         self.bet = bet
                         self.balance -= bet
                         game.dealer.pot += bet
+                        self.__log_bet(game)
                         break
                     else:
                         print(f"\n\t Please enter a valid integer less than or equal to your balance ({self.balance}).")
@@ -138,7 +198,7 @@ class Player():
                 print(f"\n\t {self.name} decides to hit. Currently on {self.hand}.\n")
                 input('\n\tPress enter to continue')
             game.dealer.addCard(self)
-        print(f"{self.name=} {self.bust}")
+            self.__log_hitStay("hit",game)
         if self.bust:
             if not isTesting:
                 os.system('cls')
@@ -146,6 +206,7 @@ class Player():
                 print('\n\n\tThe house has gone bust! All players in the game has won!!!'.upper())
                 input('\n\tPress enter to continue')
         else:
+            self.__log_hitStay("stay",game)
             if not isTesting:
                 os.system('cls')
                 dp.display(game.house,True)
@@ -170,7 +231,9 @@ class Player():
                     print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and decides to hit\n')
                     input('\n\tPress enter to continue')
                 game.dealer.addCard(self)
+                self.__log_hitStay("hit",game)
             if not self.bust:
+                self.__log_hitStay("stay",game)
                 if not isTesting:
                     self.assistant.playerHouseHandDisplay(self,game.house)
                     print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and decides stay\n')
@@ -189,9 +252,11 @@ class Player():
                 match (action):
                     case 'h':
                         game.dealer.addCard(self)
+                        self.__log_hitStay("hit",game)
                     case 's':
                         input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
                         keepOn = False
+                        self.__log_hitStay("stay",game)
                     case 'e':
                         game.exitGame = True
                         keepOn = False
