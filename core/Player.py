@@ -54,9 +54,11 @@ class Player():
         """
         house_card = game.house.cards[-1]
         house_hand = game.dealer.deck.cardPoints[house_card.split()[1]]
+        player_cards = "(" + ','.join(self.cards) + ")"
 
-        state = (game.game_ID, game.round, self.name, self.is_pc, self.cards, self.hand, self.bet, game.house.name, house_card, house_hand, game.dealer.pot)
-        C.execute("INSERT INTO players_bet VALUES (" + " ?,"*len(state)[:-1] + ")", state)
+        state = (game.game_ID, game.roundNumber, self.name, self.is_pc, player_cards, self.hand, self.bet, game.house.name, house_card, house_hand, game.dealer.pot)
+        quest_str = (" ?,"*len(state))[:-1]
+        C.execute(f"INSERT INTO players_bet VALUES ({quest_str})", state)
 
         CONN.commit()
 
@@ -80,9 +82,11 @@ class Player():
         """
         house_card = game.house.cards[-1]
         house_hand = game.dealer.deck.cardPoints[house_card.split()[1]]
+        player_cards = "(" + ','.join(self.cards) + ")"
 
-        state = (game.game_ID, game.round, self.name, self.is_pc, self.cards, self.hand, self.bust, game.house.name, house_card, house_hand, game.dealer.pot, choice)
-        C.execute("INSERT INTO players_hitStay VALUES (" + " ?,"*len(state)[:-1] + ")", state)
+        state = (game.game_ID, game.roundNumber, self.name, self.is_pc, player_cards, self.hand, self.bust, game.house.name, house_card, house_hand, game.dealer.pot, choice)
+        quest_str = (" ?,"*len(state))[:-1]
+        C.execute(f"INSERT INTO players_hitStay VALUES ({quest_str})", state)
 
         CONN.commit()
 
@@ -191,6 +195,7 @@ class Player():
         This is a method specifically for the PC player to draw a card
         """
         game.dealer.calculatePlayerHand(self)
+        self.__log_hitStay("initial",game)
         while self.hand <= 16:
             if not isTesting:
                 os.system('cls')
@@ -224,6 +229,8 @@ class Player():
         In the player is a a bot, and the player's hand value exceeds 15, it displays the player's hand and waits for user to acknowledge the decision from the bot.
         The heuristic used for the bot player is to add a card if the hand is less than or equal to 15, otherwise it will stay.
         """
+        game.dealer.calculatePlayerHand(self)
+        self.__log_hitStay("initial",game)
         if self.is_pc:
             while self.hand <= 15:
                 if not isTesting:

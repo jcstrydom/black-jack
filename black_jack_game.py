@@ -9,13 +9,47 @@ from core.GameAssistant import GameAssistant
 CONN = sqlite3.connect('data/game_state.db')
 C = CONN.cursor()
 
+def __createTables():
+    C.execute('''
+            CREATE TABLE IF NOT EXISTS players_bet (
+                game_ID TEXT,
+                roundNumber INTEGER,
+                player_name TEXT,
+                player_is_pc INTEGER,
+                player_cards TEXT,
+                player_hand INTEGER,
+                player_bet INTEGER,
+                house_name TEXT,
+                house_visible_card TEXT,
+                house_visible_hand INTEGER,
+                game_pot INTEGER
+            )
+        ''')
+    CONN.commit()
+    C.execute('''
+            CREATE TABLE IF NOT EXISTS players_hitStay (
+                game_ID TEXT,
+                roundNumber INTEGER,
+                player_name TEXT,
+                player_is_pc INTEGER,
+                player_cards TEXT,
+                player_hand INTEGER,
+                player_bust INTEGER,
+                house_name TEXT,
+                house_visible_card TEXT,
+                house_visible_hand INTEGER,
+                game_pot INTEGER,
+                player_choice TEXT
+            )
+        ''')
+    CONN.commit()
+
 
 
 def exit_gracefully():
     os.system('cls')
     print("\n\n\t\t\t\t  <<< EXITING GRACEFULLY >>> \n\n")
-    C.commit()
-    C.quit()
+    C.close()
     assistant.printWinners(game)
     sys.exit()
 
@@ -73,4 +107,5 @@ def main():
 
 
 if __name__=="__main__":
+    __createTables()
     main()
