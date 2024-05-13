@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from core.Dealer import Dealer
 from core.Player import Player
@@ -28,6 +29,9 @@ class Game:
         if not isTesting:
             print('\n\t Welcome to naive Black-Jack [with ML].\n\n\tNOTE: Please make sure that your window is maximized for optimal viewings')
             self.instructions()
+
+        # Generate a unique game ID
+        self.game_ID = str(uuid.uuid4())
 
         assistant = GameAssistant()
         assistant.getGameDetails(isTesting=isTesting)
