@@ -78,7 +78,7 @@ def main():
 
     while not game.exitGame:
         for player in game.players:
-            player.playersChoice(game)
+            player.playersTurn(game)
             if game.exitGame:
                 break
         else:
