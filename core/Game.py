@@ -106,14 +106,12 @@ class Game:
         Returns:
             bool: True if any player has a balance of 0 or less, False otherwise.
         """
-        balanceBroke = any(x.balance <= 0 for x in self.players)
-        if balanceBroke:
+        if any(x.balance <= 0 for x in self.players):
             lowBalPlayers = [p.name for p in self.players if p.balance <= 0]
+            self.players = [p for p in self.players if p.balance > 0]
             if not isTesting:
-                input('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
-            else:
-                print('The following player(s) have zero balances that caused the game to exit: '+','.join(lowBalPlayers)+'\n')
-        return balanceBroke
+                input('\n\n The following player(s) have a zero balance and will be exiting the game: '+','.join(lowBalPlayers)+'\n')
+                
 
 
     def instructions(self):

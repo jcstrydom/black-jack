@@ -144,6 +144,7 @@ class TestCalculatePlayerScore(unittest.TestCase):
         self.game.players[1].balance = 100
 
         self.game.players[1].determineBet(self.game,isTesting=True)
+        print(f"{self.game.players[1].bet=}, {self.game.players[1].balance=}, {self.game.dealer.pot=}")
         self.assertEqual(self.game.players[1].bet, 50)
         self.assertEqual(self.game.players[1].balance, 50)
         self.assertEqual(self.game.dealer.pot, 150)

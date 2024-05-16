@@ -169,26 +169,16 @@ class Player():
             while True:
                 try:
                     bet = input(f"\n\t {self.name}, what's your bet? [min: ({game.initialBet}), balance: {self.balance}] ")
-                    bet = int(bet) if not(bet == '') else game.initialBet
+                    bet = int(bet) if not ((bet == '') or (int(bet) <= game.initialBet)) else game.initialBet
                     if self.balance < game.initialBet:
                         bet = self.balance
                         print(f"\n\t {self.name} is ALL-IN. Your final bet is: {self.balance}")
-                        self.bet = bet
-                        self.balance -= bet
-                        game.dealer.pot += bet
-                        if not isTesting:
-                            self.__log_bet(game)
-                        break
-                    elif game.initialBet <= bet <= self.balance:
-                        self.bet = bet
-                        self.balance -= bet
-                        game.dealer.pot += bet
-                        if not isTesting:
-                            self.__log_bet(game)
-                        break
-                    else:
-                        print(f"\n\t Please enter a valid integer less than or equal to your balance ({self.balance}).")
-                    raise ValueError
+                    self.bet = bet
+                    self.balance -= bet
+                    game.dealer.pot += bet
+                    if not isTesting:
+                        self.__log_bet(game)
+                    break
                 except ValueError:
                     print(f"\n\t Please enter a valid integer between the minimum and your balance ({self.balance}).")
 
@@ -210,17 +200,14 @@ class Player():
             game.dealer.addCard(self)
             if not isTesting:
                 self.__log_hitStay("hit",game)
-        if self.bust:
-            if not isTesting:
-                os.system('cls')
-                dp.display(game.house,True)
+        if not isTesting:
+            os.system('cls')
+            dp.display(game.house,True)
+            if self.bust:
                 print('\n\n\tThe house has gone bust! All players in the game has won!!!'.upper())
                 input('\n\tPress enter to continue')
-        else:
-            if not isTesting:
+            else:
                 self.__log_hitStay("stay",game)
-                os.system('cls')
-                dp.display(game.house,True)
                 print('\n\t\tThe house has a final score of '+str(self.hand))
                 input('\n\tPress enter to continue')
     

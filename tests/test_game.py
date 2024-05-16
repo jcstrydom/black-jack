@@ -42,9 +42,11 @@ class TestGame(unittest.TestCase):
         game.players[1].balance = 100
         game.house.balance = -50
 
-        result = game.balanceCheck(isTesting=True)
+        game.balanceCheck(isTesting=True)
 
-        self.assertTrue(result)
+        numPlayers = len(game.players)
+
+        self.assertEqual(numPlayers, 1)
 
     def test_balanceCheck_does_not_identify_zero_balance(self):
         game = Game(isTesting=True)
