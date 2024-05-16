@@ -162,6 +162,7 @@ class Player():
             self.bet = min(math.floor(game.initialBet*betRatio),self.balance)
             self.balance -= self.bet
             game.dealer.pot += self.bet
+            input(f"\n\t {self.name} has bet {self.bet}. Your remaining balance is now {self.balance}")
             self.__log_bet(game)
         else:
             while True:
@@ -273,7 +274,7 @@ class Player():
 
 
 
-    def playersChoice(self,game):
+    def playersTurn(self,game):
         """
         This function allows the player to make a choice during the game.
         
