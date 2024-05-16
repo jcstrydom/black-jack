@@ -90,6 +90,8 @@ def main():
             stopGame = input("\n\t Do you want to stop? [ Y / (N) ] ")
             game.exitGame = (stopGame[0].lower() in game.affirm_list if not(stopGame == '') else False)
             game.balanceCheck()
+            if len(game.players) == 0:
+                game.exitGame = True
             if not game.exitGame:
                 game.newRound()
         if game.exitGame:
