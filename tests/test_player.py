@@ -91,7 +91,7 @@ class TestCalculatePlayerScore(unittest.TestCase):
         self.game.players[1].is_pc = True
         self.game.players[1].balance = 100
 
-        self.game.players[1].determineBet(self.game)
+        self.game.players[1].determineBet(self.game,isTesting=True)
         self.assertEqual(self.game.players[1].bet,50)
         self.assertEqual(self.game.players[1].balance,50)
         self.assertEqual(self.game.dealer.pot,150)
@@ -103,7 +103,7 @@ class TestCalculatePlayerScore(unittest.TestCase):
         self.game.players[0].is_pc = True
         self.game.players[0].balance = 100
 
-        self.game.players[0].determineBet(self.game)
+        self.game.players[0].determineBet(self.game,isTesting=True)
         self.assertEqual(self.game.players[0].bet,65)
         self.assertEqual(self.game.players[0].balance,35)
         self.assertEqual(self.game.dealer.pot,165)
@@ -115,7 +115,7 @@ class TestCalculatePlayerScore(unittest.TestCase):
         self.game.players[0].is_pc = True
         self.game.players[0].balance = 100
 
-        self.game.players[0].determineBet(self.game)
+        self.game.players[0].determineBet(self.game,isTesting=True)
         self.assertEqual(self.game.players[0].bet,85)
         self.assertEqual(self.game.players[0].balance,15)
         self.assertEqual(self.game.dealer.pot,185)
@@ -143,7 +143,7 @@ class TestCalculatePlayerScore(unittest.TestCase):
         self.game.players[1].is_pc = False
         self.game.players[1].balance = 100
 
-        self.game.players[1].determineBet(self.game)
+        self.game.players[1].determineBet(self.game,isTesting=True)
         self.assertEqual(self.game.players[1].bet, 50)
         self.assertEqual(self.game.players[1].balance, 50)
         self.assertEqual(self.game.dealer.pot, 150)
@@ -155,7 +155,7 @@ class TestCalculatePlayerScore(unittest.TestCase):
         self.game.players[0].is_pc = False
         self.game.players[0].balance = 100
 
-        self.game.players[0].determineBet(self.game)
+        self.game.players[0].determineBet(self.game,isTesting=True)
         self.assertEqual(self.game.players[0].bet, 75)
         self.assertEqual(self.game.players[0].balance, 25)
         self.assertEqual(self.game.dealer.pot, 175)
@@ -167,7 +167,7 @@ class TestCalculatePlayerScore(unittest.TestCase):
         self.game.players[0].is_pc = False
         self.game.players[0].balance = 10
 
-        self.game.players[0].determineBet(self.game)
+        self.game.players[0].determineBet(self.game,isTesting=True)
         self.assertEqual(self.game.players[0].bet,10)
         self.assertEqual(self.game.players[0].balance, 0)
         self.assertEqual(self.game.dealer.pot, 110)

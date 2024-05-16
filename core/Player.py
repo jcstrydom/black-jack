@@ -134,7 +134,7 @@ class Player():
         """
         return self.name
     
-    def determineBet(self,game):
+    def determineBet(self,game,isTesting=False):
         """
         Determines the bet for the player based on the current game state.
 
@@ -162,8 +162,9 @@ class Player():
             self.bet = min(math.floor(game.initialBet*betRatio),self.balance)
             self.balance -= self.bet
             game.dealer.pot += self.bet
-            input(f"\n\t {self.name} has bet {self.bet}. Your remaining balance is now {self.balance}")
-            self.__log_bet(game)
+            if not isTesting:
+                input(f"\n\t {self.name} has bet {self.bet}. Your remaining balance is now {self.balance}")
+                self.__log_bet(game)
         else:
             while True:
                 try:
@@ -175,13 +176,15 @@ class Player():
                         self.bet = bet
                         self.balance -= bet
                         game.dealer.pot += bet
-                        self.__log_bet(game)
+                        if not isTesting:
+                            self.__log_bet(game)
                         break
                     elif game.initialBet <= bet <= self.balance:
                         self.bet = bet
                         self.balance -= bet
                         game.dealer.pot += bet
-                        self.__log_bet(game)
+                        if not isTesting:
+                            self.__log_bet(game)
                         break
                     else:
                         print(f"\n\t Please enter a valid integer less than or equal to your balance ({self.balance}).")
@@ -196,7 +199,8 @@ class Player():
         This is a method specifically for the PC player to draw a card
         """
         game.dealer.calculatePlayerHand(self)
-        self.__log_hitStay("initial",game)
+        if not isTesting:
+            self.__log_hitStay("initial",game)
         while self.hand <= 16:
             if not isTesting:
                 os.system('cls')
@@ -204,7 +208,8 @@ class Player():
                 print(f"\n\t {self.name} decides to hit. Currently on {self.hand}.\n")
                 input('\n\tPress enter to continue')
             game.dealer.addCard(self)
-            self.__log_hitStay("hit",game)
+            if not isTesting:
+                self.__log_hitStay("hit",game)
         if self.bust:
             if not isTesting:
                 os.system('cls')
@@ -212,8 +217,8 @@ class Player():
                 print('\n\n\tThe house has gone bust! All players in the game has won!!!'.upper())
                 input('\n\tPress enter to continue')
         else:
-            self.__log_hitStay("stay",game)
             if not isTesting:
+                self.__log_hitStay("stay",game)
                 os.system('cls')
                 dp.display(game.house,True)
                 print('\n\t\tThe house has a final score of '+str(self.hand))
@@ -231,7 +236,8 @@ class Player():
         The heuristic used for the bot player is to add a card if the hand is less than or equal to 15, otherwise it will stay.
         """
         game.dealer.calculatePlayerHand(self)
-        self.__log_hitStay("initial",game)
+        if not isTesting:
+            self.__log_hitStay("initial",game)
         if self.is_pc:
             while self.hand <= 15:
                 if not isTesting:
@@ -239,10 +245,11 @@ class Player():
                     print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and decides to hit\n')
                     input('\n\tPress enter to continue')
                 game.dealer.addCard(self)
-                self.__log_hitStay("hit",game)
-            if not self.bust:
-                self.__log_hitStay("stay",game)
                 if not isTesting:
+                    self.__log_hitStay("hit",game)
+            if not self.bust:
+                if not isTesting:
+                    self.__log_hitStay("stay",game)
                     self.assistant.playerHouseHandDisplay(self,game.house)
                     print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and decides stay\n')
                     input('\n\tPress enter to continue')
@@ -260,11 +267,13 @@ class Player():
                 match (action):
                     case 'h':
                         game.dealer.addCard(self)
-                        self.__log_hitStay("hit",game)
+                        if not isTesting:
+                            self.__log_hitStay("hit",game)
                     case 's':
                         input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
                         keepOn = False
-                        self.__log_hitStay("stay",game)
+                        if not isTesting:
+                            self.__log_hitStay("stay",game)
                     case 'e':
                         game.exitGame = True
                         keepOn = False
