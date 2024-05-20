@@ -54,7 +54,7 @@ class TestGame(unittest.TestCase):
         game.players[1].balance = 50
         game.house.balance = 0
 
-        result = game.balanceCheck()
+        result = game.balanceCheck(isTesting=True)
 
         self.assertFalse(result)
 
