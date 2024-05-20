@@ -106,9 +106,9 @@ class Game:
         Returns:
             bool: True if any player has a balance of 0 or less, False otherwise.
         """
-        if any(x.balance <= 0 for x in self.players):
-            lowBalPlayers = [p.name for p in self.players if p.balance <= 0]
-            self.players = [p for p in self.players if p.balance > 0]
+        lowBalPlayers = [p.name for p in self.players if p.balance <= self.initialBet]
+        if len(lowBalPlayers)>0:
+            self.players = [p for p in self.players if p.name not in lowBalPlayers]
             if not isTesting:
                 input('\n\n The following player(s) have a zero balance and will be exiting the game: '+','.join(lowBalPlayers)+'\n')
                 
