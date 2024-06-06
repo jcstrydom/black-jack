@@ -276,3 +276,129 @@ class TestDealer(unittest.TestCase):
                 self.assertTrue(player.won)
                 # print(f"{player.name} --> {player.winnings}")
                 self.assertEqual(player.winnings[0],win)
+
+
+    def test_newPayWinners_house_bust(self):
+        """
+        Test the behavior of the `payWinners_new` method, when the house goes bust while the players don't.
+
+        Parameters:
+            self (TestPayWinners): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.game.dealer.pot = 200; self.game.roundNumber = 0
+        cards = ["Spade 2", "Heart 3","Diamond K","Club J"]
+        self.game.house.cards = ["Club A", "Heart A", "Heart 10", "Diamond 6", "Spade A", "Heart 4"]
+        
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        self.game.players[0].bet = 150; self.game.players[1].bet = 100
+        for player in [*self.game.players, self.game.house]:
+            self.game.dealer.calculatePlayerHand(player)
+
+        self.game.dealer.payWinners_new(self.game)
+
+        # print(f'House score: {self.game.house.hand}')
+        # print(f"Winners list: {self.game.winners}")
+
+        self.assertEqual(self.game.winners[0], ["TestPlayer1", "TestPlayer2"])
+        share = [300,200,0]
+        for win,player in zip(share,[*self.game.players, self.game.house]):
+            # print(f"{self.game.winners[0]}")
+            if player.name in self.game.winners[0]:
+                self.assertTrue(player.won)
+                # print(f"{player.name} --> {player.winnings}")
+                self.assertEqual(player.winnings[0],win)
+
+
+    def test_newPayWinners_house_21(self):
+        """
+        Test the behavior of the `payWinners` method, when the house has 21 while TestPlayer2 also has 21.
+
+        Parameters:
+            self (TestPayWinners): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.game.dealer.pot = 200; self.game.roundNumber = 0
+        cards = ["Spade 2", "Heart 3","Diamond K","Club J"]
+        self.game.house.cards = ["Club K", "Heart A"]
+        
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        self.game.players[0].bet = 150; self.game.players[1].bet = 100
+        for player in [*self.game.players, self.game.house]:
+            self.game.dealer.calculatePlayerHand(player)
+
+        self.game.dealer.payWinners_new(self.game)
+
+        self.assertEqual(self.game.winners[0], ["House"])
+        share = [0,0,250]
+        for win,player in zip(share,[*self.game.players, self.game.house]):
+            if player.name in self.game.winners[0]:
+                self.assertTrue(player.won)
+                # print(f"{player.name} --> {player.winnings}")
+                self.assertEqual(player.winnings[0],win)
+
+    def test_newPayWinners_house_20(self):
+        """
+        Test the behavior of the `payWinners` method, when the house has 21 while TestPlayer2 also has 21.
+
+        Parameters:
+            self (TestPayWinners): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.game.dealer.pot = 200; self.game.roundNumber = 0
+        cards = ["Spade 2", "Heart 3","Diamond K","Club A"]
+        self.game.house.cards = ["Club K", "Heart J"]
+        
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        self.game.players[0].bet = 150; self.game.players[1].bet = 100
+        for player in [*self.game.players, self.game.house]:
+            self.game.dealer.calculatePlayerHand(player)
+
+        self.game.dealer.payWinners_new(self.game)
+
+        self.assertEqual(self.game.winners[0], ["TestPlayer2"])
+        share = [0,250,0]
+        for win,player in zip(share,[*self.game.players, self.game.house]):
+            if player.name in self.game.winners[0]:
+                self.assertTrue(player.won)
+                # print(f"{player.name} --> {player.winnings}")
+                self.assertEqual(player.winnings[0],win)
+
+    def test_newPayWinners_house_equal(self):
+        """
+        Test the behavior of the `payWinners` method, when the house has 21 while TestPlayer2 also has 21.
+
+        Parameters:
+            self (TestPayWinners): The current instance of the test case.
+
+        Returns:
+            None
+        """
+        self.game.dealer.pot = 200; self.game.roundNumber = 0
+        cards = ["Spade 2", "Heart 3","Diamond K","Club A"]
+        self.game.house.cards = ["Club K", "Heart A"]
+        
+        self.game.players[0].cards = cards[:2]; self.game.players[1].cards = cards[2:]
+        self.game.players[0].bet = 150; self.game.players[1].bet = 100
+        for player in [*self.game.players, self.game.house]:
+            self.game.dealer.calculatePlayerHand(player)
+
+        self.game.dealer.payWinners_new(self.game)
+
+        # print(f'House score: {self.game.house.hand}')
+        # print(f"Winners list: {self.game.winners}")
+
+        self.assertEqual(self.game.winners[0], ['House'])
+        share = [0,100,150]
+        for win,player in zip(share,[*self.game.players, self.game.house]):
+            # print(f"{self.game.winners[0]}")
+            if player.name in self.game.winners[0]:
+                self.assertTrue(player.won)
+                print(f"{player.name} --> {player.winnings}")
+                self.assertEqual(player.winnings[0],win)
