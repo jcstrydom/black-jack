@@ -259,7 +259,7 @@ class Player():
                     case 'd':
                         game.dealer.addCard(self)
                         if not isTesting:
-                            self.__log_hitStay('hit',game)
+                            self.__log_hitStay('double-down',game)
                         new_bet = self.balance if (self.balance < self.bet) else self.bet
                         self.bet += new_bet
                         self.balance -= new_bet
