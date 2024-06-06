@@ -22,7 +22,8 @@ def __createTables():
                 house_name TEXT,
                 house_visible_card TEXT,
                 house_visible_hand INTEGER,
-                game_pot INTEGER
+                game_pot INTEGER,
+                round_initial_bet INTEGER
             )
         ''')
     CONN.commit()
