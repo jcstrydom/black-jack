@@ -260,17 +260,20 @@ class Player():
                         if not isTesting:
                             self.__log_hitStay("hit",game)
                     case 'd':
-                        game.dealer.addCard(self)
-                        new_bet = self.balance if (self.balance < self.bet) else self.bet
-                        self.bet += new_bet
-                        self.balance -= new_bet
-                        if self.balance == 0:
-                            input(f"\n\t\t You are ALL-IN. Your new bet is {self.bet}")
+                        if decision_no == 0:
+                            game.dealer.addCard(self)
+                            new_bet = self.balance if (self.balance < self.bet) else self.bet
+                            self.bet += new_bet
+                            self.balance -= new_bet
+                            if self.balance == 0:
+                                input(f"\n\t\t You are ALL-IN. Your new bet is {self.bet}")
+                            else:
+                                input(f"\n\t\t Your new bet is {self.bet}")
+                            if not isTesting:
+                                self.__log_hitStay('double-down',game)
+                                self.__log_bet(game)
                         else:
-                            input(f"\n\t\t Your new bet is {self.bet}")
-                        if not isTesting:
-                            self.__log_hitStay('double-down',game)
-                            self.__log_bet(game)
+                            input(f"\n\t\t Not a valid choice. Please try again.")
                     case 's':
                         input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
                         keepOn = False
@@ -282,7 +285,6 @@ class Player():
                     case _:
                         print('You did not give a valid answer. Please try again...')
                 decision_no += 1
-
 
 
 
