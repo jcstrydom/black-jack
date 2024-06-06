@@ -19,7 +19,7 @@ class GameAssistant:
             self.bots = 0
             self.buyin = 300
         else:
-            name_inputs = input(f"\n\t Enter the player names (separated by space) [<ENTER> --> default]: ")
+            name_inputs = input(f"\n\t Enter the player names (separated by space): ")
             isDefault = (name_inputs[0] == 'd' if not(name_inputs == '') else True)
             self.player_names = ['Joe','Albert'] if isDefault else name_inputs.split(' ')
             self.bots = 1 if isDefault else self.getNumericInput('robot players',max_value=len(self.player_names))
@@ -41,10 +41,11 @@ class GameAssistant:
         """
         print("\n\t\t\t\t\t" + "="*40 + f"\n\t\t\t\t\t\t  RESULTS FOR ROUND {game.roundNumber}\n\t\t\t\t\t" + "="*40 + "\n")
         max_round_of_winners = max(list(game.winners.keys())) if len(game.winners) > 0 else -1
+        total_winnings = sum([i.bet for i in game.players if i.won == True])
+        total_loss = sum([i.bet for i in game.players if i.won == False])
         if max_round_of_winners != -1:
             winners_count = len(game.winners[max_round_of_winners])
-            per_winner_winnings = round(game.dealer.pot / winners_count) if winners_count > 0 else 0
-            print(f"\n ROUND = {max_round_of_winners:>3}; Total winnings: {game.dealer.pot:>6}; Total winners: {winners_count:>6}; Winners share: {per_winner_winnings:>6}; ")
+            print(f"\n ROUND = {max_round_of_winners:>3}; Total winnings: {total_winnings:>6}; Total winners: {winners_count:>6}; Total lost: {total_loss:>6}; ")
             winners_string = ','.join(game.winners[max_round_of_winners])
             print("Winners: "+winners_string+"\n")
         else:
@@ -114,3 +115,17 @@ class GameAssistant:
         dp.display(house)
         print('\t'*10 + '='*40)
         dp.display(player)
+
+    
+    def houseHandDisplay(self, house):
+        """
+        A function that prints the hand of only the house
+
+        Parameters:
+            house (object): The house object to be displayed.
+
+        Returns:
+            None
+        """
+        os.system('cls')
+        dp.display(house)
