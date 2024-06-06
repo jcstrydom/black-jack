@@ -175,6 +175,61 @@ class Dealer():
         game.winners[game.roundNumber] = winners
         # print(f"\n Winners = {game.winners[game.roundNumber]}")
 
+
+    def payWinners_new(self,game):
+        """
+        Determines the winners of the game and distributes the pot among them.
+
+        Parameters:
+            self: The object itself.
+            game: An instance of the Game class representing the current game state.
+
+        Returns:
+            None
+        """
+        winners = []
+        number_of_winners = 0
+        house_winnings = 0
+
+        if game.house.bust:
+            # print("House busts...")
+            for i in game.players:
+                if not i.bust:
+                    i.won = True
+                    multiplier = 2.5 if ((len(i.cards) == 2) and (i.hand == 21)) else 2
+                    i.balance += i.bet*multiplier
+                    i.winnings[game.roundNumber] = i.bet*multiplier
+                    winners.append(i.name)
+                    number_of_winners += 1
+                else:
+                    house_winnings += i.bet
+        else:
+            for i in game.players:
+                if (not i.bust) and (i.hand >= game.house.hand):
+                    i.won = True if (i.hand > game.house.hand) else False
+                    multiplier = 2.5 if ((len(i.cards) == 2) and (i.hand == 21) and (i.hand > game.house.hand)) else 1 if (i.hand == game.house.hand) else 2
+                    i.balance += i.bet*multiplier
+                    i.winnings[game.roundNumber] = i.bet*multiplier
+                    winners.append(i.name)
+                    if i.hand > game.house.hand:
+                        number_of_winners += 1
+                else:
+                    house_winnings += i.bet
+
+        if number_of_winners == 0:
+            # print(f"{number_of_winners} winners: {winners}")
+            game.house.won = True
+            game.house.winnings[game.roundNumber] = house_winnings
+            winners = [game.house.name]
+            # print(f"{game.house.name} won {game.house.winnings[game.roundNumber]}")
+
+        # if len(winners)>0:
+        #     print(f"'winners' [{type(winners)}] of [{type(winners[0])}] = {winners}")
+
+        game.winners[game.roundNumber] = winners
+        # print(f"\n Winners = {game.winners[game.roundNumber]}")
+
+
                 
                     
 
