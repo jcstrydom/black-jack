@@ -245,11 +245,14 @@ class Player():
                     print('\n\t\t'+self.name+' has bet '+str(self.bet)+' and went bust\n')
                     input('\n\tPress enter to continue')
         else:
-            keepOn = True
+            keepOn = True; decision_no = 0
             while (not self.bust) and (keepOn):
                 self.assistant.playerHouseHandDisplay(self,game.house)
-                action = input('\t What do you want to do?\n\t [(H)] Hit (draw another card)\n\t [ D ] Double down (double bet and draw another card)\n\t' \
-                               ' [ S ] Stand (no action)\n\t [ E ] Exit the game\n\t\t')
+                if decision_no < 1:
+                    action = input('\t What do you want to do?\n\t [(H)] Hit (draw another card)\n\t [ D ] Double down (double bet and draw another card)\n\t' \
+                                ' [ S ] Stand (no action)\n\t [ E ] Exit the game\n\t\t')
+                else:
+                    action = input('\t What do you want to do?\n\t [(H)] Hit (draw another card)\n\t [ S ] Stand (no action)\n\t [ E ] Exit the game\n\t\t')
                 action = (action[0].lower() if not(action == '') else 'h')
                 match (action):
                     case 'h':
@@ -262,9 +265,9 @@ class Player():
                         self.bet += new_bet
                         self.balance -= new_bet
                         if self.balance == 0:
-                            input(f"\n\t\t You are ALL-IN. Your current score is {self.hand} with an updated bet of {self.bet}")
+                            input(f"\n\t\t You are ALL-IN. Your new bet is {self.bet}")
                         else:
-                            input(f"\n\t\t Your current score is {self.hand} with an updated bet of {self.bet}")
+                            input(f"\n\t\t Your new bet is {self.bet}")
                         if not isTesting:
                             self.__log_hitStay('double-down',game)
                             self.__log_bet(game)
@@ -278,6 +281,7 @@ class Player():
                         keepOn = False
                     case _:
                         print('You did not give a valid answer. Please try again...')
+                decision_no += 1
 
 
 
@@ -293,8 +297,9 @@ class Player():
             None
         """
 
-        self.assistant.playerHouseHandDisplay(self,game.house)
+        self.assistant.houseHandDisplay(game.house)
         self.determineBet(game)
+        self.assistant.playerHouseHandDisplay(self,game.house)
         self.hitStayExit(game)
 
         if self.bust:
