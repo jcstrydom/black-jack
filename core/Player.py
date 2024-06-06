@@ -263,7 +263,7 @@ class Player():
                         new_bet = self.balance if (self.balance < self.bet) else self.bet
                         self.bet += new_bet
                         self.balance -= new_bet
-                        if new_bet < self.bet:
+                        if self.balance == 0:
                             input(f"\n\t\t You are ALL-IN. Your current score is {self.hand} with a bet of {self.bet}")
                     case 's':
                         input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
