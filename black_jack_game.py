@@ -86,7 +86,7 @@ def main():
             game.house.houseHitStay(game)
         
             os.system('cls')
-            game.dealer.payWinners(game)
+            game.dealer.payWinners_new(game)
             assistant.printWinners(game)
             stopGame = input("\n\t Do you want to stop? [ Y / (N) ] ")
             game.exitGame = (stopGame[0].lower() in game.affirm_list if not(stopGame == '') else False)
