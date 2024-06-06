@@ -258,13 +258,16 @@ class Player():
                             self.__log_hitStay("hit",game)
                     case 'd':
                         game.dealer.addCard(self)
-                        if not isTesting:
-                            self.__log_hitStay('double-down',game)
                         new_bet = self.balance if (self.balance < self.bet) else self.bet
                         self.bet += new_bet
                         self.balance -= new_bet
                         if self.balance == 0:
-                            input(f"\n\t\t You are ALL-IN. Your current score is {self.hand} with a bet of {self.bet}")
+                            input(f"\n\t\t You are ALL-IN. Your current score is {self.hand} with an updated bet of {self.bet}")
+                        else:
+                            input(f"\n\t\t Your current score is {self.hand} with an updated bet of {self.bet}")
+                        if not isTesting:
+                            self.__log_hitStay('double-down',game)
+                            self.__log_bet(game)
                     case 's':
                         input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
                         keepOn = False
