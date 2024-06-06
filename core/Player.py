@@ -156,7 +156,7 @@ class Player():
             - This function assumes that the game object's `dealer` attribute is an instance of the `Dealer` class and has a `pot` attribute to store the bets.
         """
         if self.is_pc:
-            betRatio = (1.5 + (self.hand-15)/15) # I am checking howfar from 15 is the first 2 cards
+            betRatio = (1.5 + (self.hand-15)/15) # I am checking how far from 15 is the first 2 cards
             if betRatio <=1:
                 betRatio = 1
             self.bet = min(math.floor(game.initialBet*betRatio),self.balance)
@@ -183,7 +183,6 @@ class Player():
                     print(f"\n\t Please enter a valid integer between the minimum and your balance ({self.balance}).")
 
     
-
     def houseHitStay(self,game,isTesting=False):
         """
         This is a method specifically for the PC player to draw a card
@@ -249,13 +248,23 @@ class Player():
             keepOn = True
             while (not self.bust) and (keepOn):
                 self.assistant.playerHouseHandDisplay(self,game.house)
-                action = input('\t What do you want to do?\n\t [(H)] Hit (draw another card)\n\t [ S ] Stand (no action)\n\t [ E ] Exit the game\n\t\t')
+                action = input('\t What do you want to do?\n\t [(H)] Hit (draw another card)\n\t [ D ] Double down (double bet and draw another card)\n\t' \
+                               ' [ S ] Stand (no action)\n\t [ E ] Exit the game\n\t\t')
                 action = (action[0].lower() if not(action == '') else 'h')
                 match (action):
                     case 'h':
                         game.dealer.addCard(self)
                         if not isTesting:
                             self.__log_hitStay("hit",game)
+                    case 'd':
+                        game.dealer.addCard(self)
+                        if not isTesting:
+                            self.__log_hitStay('hit',game)
+                        new_bet = self.balance if (self.balance < self.bet) else self.bet
+                        self.bet += new_bet
+                        self.balance -= new_bet
+                        if new_bet < self.bet:
+                            input(f"\n\t\t You are ALL-IN. Your current score is {self.hand} with a bet of {self.bet}")
                     case 's':
                         input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
                         keepOn = False
