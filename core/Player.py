@@ -169,7 +169,7 @@ class Player():
             while True:
                 try:
                     bet = input(f"\n\t {self.name}, what's your bet? [min: ({game.initialBet}), balance: {self.balance}] ")
-                    bet = int(bet) if not ((bet == '') or (int(bet) <= game.initialBet)) else game.initialBet
+                    bet = int(bet) if not ((bet == '') or (int(bet) <= game.initialBet)) else self.balance if (self.balance <= game.initialBet) else game.initialBet
                     if self.balance < game.initialBet:
                         bet = self.balance
                         print(f"\n\t {self.name} is ALL-IN. Your final bet is: {self.balance}")
