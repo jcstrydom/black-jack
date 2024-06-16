@@ -285,6 +285,8 @@ class Player():
                     case _:
                         print('You did not give a valid answer. Please try again...')
                 decision_no += 1
+            if self.bust:
+                self.__log_hitStay("bust",game)
 
 
 
