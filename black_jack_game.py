@@ -33,17 +33,20 @@ def __createTables():
                 roundNumber INTEGER,
                 player_name TEXT,
                 player_is_pc INTEGER,
+                round_initial_bet INTEGER,
+                player_bet INTEGER,
+                game_pot INTEGER,
                 player_cards TEXT,
                 player_hand INTEGER,
                 player_bust INTEGER,
                 house_name TEXT,
                 house_visible_card TEXT,
                 house_visible_hand INTEGER,
-                game_pot INTEGER,
                 player_choice TEXT
             )
         ''')
     CONN.commit()
+    
 
 
 
