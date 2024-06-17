@@ -188,21 +188,19 @@ class Player():
         This is a method specifically for the PC player to draw a card
         """
         game.dealer.calculatePlayerHand(self)
-        if not isTesting:
-            self.__log_hitStay("initial",game)
         while self.hand <= 16:
             if not isTesting:
                 os.system('cls')
                 dp.display(game.house,True)
                 print(f"\n\t {self.name} decides to hit. Currently on {self.hand}.\n")
                 input('\n\tPress enter to continue')
-            game.dealer.addCard(self)
-            if not isTesting:
                 self.__log_hitStay("hit",game)
+            game.dealer.addCard(self)
         if not isTesting:
             os.system('cls')
             dp.display(game.house,True)
             if self.bust:
+                self.__log_hitStay("bust",game)
                 print('\n\n\tThe house has gone bust! All players in the game has won!!!'.upper())
                 input('\n\tPress enter to continue')
             else:
@@ -222,8 +220,6 @@ class Player():
         The heuristic used for the bot player is to add a card if the hand is less than or equal to 15, otherwise it will stay.
         """
         game.dealer.calculatePlayerHand(self)
-        # if not isTesting:
-        #     self.__log_hitStay("initial",game)
         if self.is_pc:
             while self.hand <= 15:
                 if not isTesting:
@@ -273,11 +269,11 @@ class Player():
                             else:
                                 input(f"\n\t\t Your new bet is {self.bet}")
                         else:
-                            input(f"\n\t\t Not a valid choice. Please try again.")
+                            input(f"\n\t\t Not a valid choice. Please try again. ")
                     case 's':
                         if not isTesting:
                             self.__log_hitStay("stay",game)
-                        input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet}")
+                        input(f"\n\t\t Your current score is {self.hand} with a bet of {self.bet} ")
                         keepOn = False
                     case 'e':
                         game.exitGame = True
