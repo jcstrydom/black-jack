@@ -84,7 +84,7 @@ class Player():
         house_hand = game.dealer.deck.cardPoints[house_card.split()[1]]
         player_cards = "(" + ','.join(self.cards) + ")"
 
-        state = (game.game_ID, game.roundNumber, self.name, self.is_pc, player_cards, self.hand, self.bust, game.house.name, house_card, house_hand, game.dealer.pot, choice)
+        state = (game.game_ID, game.roundNumber, self.name, self.is_pc, game.initialBet, self.bet, game.dealer.pot, player_cards, self.hand, self.bust, game.house.name, house_card, house_hand, choice)
         quest_str = (" ?,"*len(state))[:-1]
         C.execute(f"INSERT INTO players_hitStay VALUES ({quest_str})", state)
 
