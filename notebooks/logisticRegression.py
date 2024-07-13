@@ -59,6 +59,9 @@ class LogisticRegression:
             
             if i % 100 == 0:
                 print(f'Loss after iteration {i:>4}: {loss:.4f}')
+
+        print(f"Loss after FINAL iteration: {loss:.4f} (iterations={self.num_iterations:>6})")
+        
     
     def predict(self, X,threshold=None):
         m, X = self.add_1_vector(X)
