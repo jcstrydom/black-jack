@@ -13,6 +13,7 @@ A short how-to-guide to run tests written for the environment
 > `> pip install coverage`
 >
 >This can be run inside your python distro natively, or from within an activated conda environment.
+>If either of the supplied `black_jack_requirments.txt` or `black_jack_environment.yml` files were used to do the pip install or conda environment creation respectively, this will be taken care of.
 
 ## Running <u>ALL</u> tests with `coverage`
 
