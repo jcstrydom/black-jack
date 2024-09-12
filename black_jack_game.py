@@ -54,7 +54,8 @@ def exit_gracefully():
     os.system('cls')
     print("\n\n\t\t\t\t  <<< EXITING GRACEFULLY >>> \n\n")
     C.close()
-    assistant.printWinners(game)
+    if assistant:
+        assistant.printWinners(game)
     sys.exit()
 
 def exit_on_key(func):
